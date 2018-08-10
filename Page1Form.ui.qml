@@ -1,4 +1,4 @@
-import QtQuick 2.9
+import QtQuick 2.11
 import QtQuick.Controls 2.2
 
 import QtQuick.Studio.Components 1.0
@@ -23,7 +23,7 @@ Page {
     }
 
     header: Label {
-        text: qsTr("Page 1")
+        text: qsTr("")
         font.pixelSize: Qt.application.font.pixelSize * 2
         padding: 10
         color: colorTittle
@@ -35,6 +35,23 @@ Page {
         anchors.verticalCenter: parent.verticalCenter
         height: page.height / 2
         width: page.height / 2
+
+        MouseArea {
+            anchors.fill: parent
+
+            // @disable-check M223
+            onClicked: {
+                // @disable-check M223
+                if (aim.running) {
+                    // @disable-check M222
+                    aim.stop()
+                    // @disable-check M223
+                } else {
+                    // @disable-check M222
+                    aim.start()
+                }
+            }
+        }
 
         Label {
             text: "Загрузить перечень"
@@ -74,6 +91,7 @@ Page {
             hideLine: true
             anchors.fill: parent
             strokeWidth: 6
+            begin: 0
             end: 360
             strokeColor: "#e2b62f" //f3717d"
             smooth: true
@@ -85,31 +103,50 @@ Page {
             // @disable-check M221
             ParallelAnimation {
                 id: aim
-                ColorAnimation {
-                    target: pie
-                    property: "strokeColor"
-                    from: "#e2b62f"
-                    to: "#9fcd61"
-                    duration: 3600
-                }
-                NumberAnimation {
-                    target: pie
-                    property: "end"
-                    from: 0
-                    to: 360
-                    duration: 3600
+
+                // @disable-check M221
+                SequentialAnimation {
+                    ColorAnimation {
+                        target: pie
+                        property: "strokeColor"
+                        from: "#e2b62f"
+                        to: "#9fcd61"
+                        duration: 3600
+                    }
+                    ColorAnimation {
+                        target: pie
+                        property: "strokeColor"
+                        from: "#9fcd61"
+                        to: colorBackground
+                        duration: 3600 / 4 + 100
+                    }
                 }
 
-                //                NumberAnimation {
-                //                    target: pie
-                //                    property: "begin"
-                //                    from: 360
-                //                    to: 0
-                //                    duration: 3600
-                //                }
-                running: true
-
-                loops: 300
+                // @disable-check M221
+                SequentialAnimation {
+                    NumberAnimation {
+                        target: pie
+                        property: "end"
+                        from: 0
+                        to: 360
+                        duration: 3600
+                    }
+                    NumberAnimation {
+                        target: pie
+                        property: "begin"
+                        from: 0
+                        to: 360
+                        duration: 3600 / 4
+                    }
+                    NumberAnimation {
+                        target: pie
+                        property: "begin"
+                        from: 0
+                        to: 0
+                        duration: 1
+                    }
+                }
+                loops: Animation.Infinite
             }
 
             //            // @disable-check M224

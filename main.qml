@@ -13,6 +13,8 @@ ApplicationWindow {
     title: qsTr("Tabs")
 
 
+
+
     property int dpi: Screen.pixelDensity * 25.4
     property string colorBackground: "#272c32"
     property string colorTittle: "#f6fbff"

@@ -4,7 +4,6 @@ import QtQuick.Controls 2.2
 import QtQuick.Studio.Components 1.0
 import QtQuick.Studio.Effects 1.0
 
-//import QtQuick.Timeline 1.0
 import QtGraphicalEffects 1.0
 
 Page {
@@ -51,19 +50,26 @@ Page {
 
         PieItem {
             id: pieUnder
+            asynchronous: true
             antialiasing: true
             vendorExtensionsEnabled: true
             hideLine: true
             anchors.fill: parent
             strokeWidth: 6
+            begin: 0
             end: 360
             strokeColor: "#3f444a"
             smooth: true
+
+            layer.enabled: true
+            layer.smooth: true
+            layer.samples: 8
         }
 
         PieItem {
             id: pie
             antialiasing: true
+            asynchronous: true
             vendorExtensionsEnabled: true
             hideLine: true
             anchors.fill: parent
@@ -71,6 +77,10 @@ Page {
             end: 360
             strokeColor: "#e2b62f" //f3717d"
             smooth: true
+
+            layer.enabled: true
+            layer.smooth: true
+            layer.samples: 8
 
             // @disable-check M221
             ParallelAnimation {
@@ -90,14 +100,13 @@ Page {
                     duration: 3600
                 }
 
-//                NumberAnimation {
-//                    target: pie
-//                    property: "begin"
-//                    from: 360
-//                    to: 0
-//                    duration: 3600
-//                }
-
+                //                NumberAnimation {
+                //                    target: pie
+                //                    property: "begin"
+                //                    from: 360
+                //                    to: 0
+                //                    duration: 3600
+                //                }
                 running: true
 
                 loops: 300
@@ -185,54 +194,6 @@ Page {
         //            end: 1000
         //            begin: -79.9
 
-        //        }
-
-        //        Timeline {
-        //            id: timeline
-        //            animations: [
-        //                TimelineAnimation {
-        //                    id: timelineAnimation
-        //                    property: "currentFrame"
-        //                    to: 1000
-        //                    from: 0
-        //                    running: true
-        //                    loops: 1
-        //                    duration: 1000
-        //                }
-        //            ]
-        //            enabled: true
-        //            endFrame: 1000
-        //            startFrame: 0
-
-        //            KeyframeGroup {
-        //                target: arc
-        //                property: "begin"
-
-        //                Keyframe {
-        //                    value: -40.9
-        //                    frame: 100
-        //                }
-
-        //                Keyframe {
-        //                    value: -0.9
-        //                    frame: 200
-        //                }
-
-        //                Keyframe {
-        //                    value: 40.9
-        //                    frame: 300
-        //                }
-
-        //                Keyframe {
-        //                    value: 90.9
-        //                    frame: 400
-        //                }
-
-        //                Keyframe {
-        //                    value: 30.9
-        //                    frame: 500
-        //                }
-        //            }
         //        }
     }
 

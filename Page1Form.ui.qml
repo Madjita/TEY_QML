@@ -141,40 +141,35 @@ Page {
             // @disable-check M223
             onEndChanged: {
 
-                console.log("wordQMLModel = " +wordQMLModel.rows * 100);
+                console.log("wordQMLModel = " + wordQMLModel.rows * 100)
+
 
                 // @disable-check M223
                 if (wordQMLModel.countBar !== 0) {
-                    Utils.CountLoadingFileBar += 100/wordQMLModel.rows
+                    Utils.CountLoadingFileBar += 100 / wordQMLModel.rows
                     label.text = Math.round(Utils.CountLoadingFileBar) + " %"
                     label.scale = 1.15
 
-                    if(Math.round(Utils.CountLoadingFileBar) <= 25)
-                    {
-                        pie.strokeColor = "#f66f75";
-                    }
-                    else
-                    {
-                        if(Math.round(Utils.CountLoadingFileBar) <= 75)
-                        {
-                             pie.strokeColor = "#e2b62f";
-                        }
-                        else
-                        {
-                           pie.strokeColor = "#9fcd61";
+                    if (Math.round(Utils.CountLoadingFileBar) <= 25) {
+                        pie.strokeColor = "#f66f75"
+                    } else {
+                        if (Math.round(Utils.CountLoadingFileBar) <= 75) {
+                            pie.strokeColor = "#e2b62f"
+                        } else {
+                            pie.strokeColor = "#9fcd61"
                         }
                     }
-
 
                     // @disable-check M223
                 } else {
                     label.scale = 1.0
                     pie.begin = "0.0001"
-                    pie.strokeColor = "#3f444a";
-                    Utils.CountLoadingFileBar = 0;
+                    pie.strokeColor = "#3f444a"
+                    Utils.CountLoadingFileBar = 0
                     label.text = "Загрузить перечень"
                 }
             }
+
 
             ColorAnimation {
                 id: aimPie

@@ -31,14 +31,17 @@ void WordQMLModel::changeWork(int rows)
 
     _countBar += row;
 
-    if(_countBar >= 359)
+
+    emit countBarChanged(_countBar);
+
+    if(_countBar >= (row*rows)-row)
     {
         _countBar = 0;
         _rows = 0;
+         emit countBarChanged(_countBar);
     }
 
-//    qDebug () << _countBar;
-//    qDebug () << row;
+   qDebug () << _countBar;
+   qDebug () << row*rows;
 
-    emit countBarChanged(_countBar);
 }

@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.3
 import QtQuick.Controls.Styles 1.4
 
+import Qt.labs.platform 1.0
+
 ApplicationWindow {
     id:main
     visible: true
@@ -46,7 +48,9 @@ ApplicationWindow {
                 font.pointSize: 20
 
 
-                onClicked: stack.pop()
+                onClicked: {
+                    stack.pop()
+                }
 
                 contentItem: Text {
                     text: controlPop.text
@@ -66,8 +70,8 @@ ApplicationWindow {
                                          || controlPop.highlighted) ? 1.5 : 1.0)
                     opacity: enabled ? 1 : 0.3
                     visible: controlPop.down || (controlPop.enabled
-                                              && (controlPop.checked
-                                                  || controlPop.highlighted))
+                                                 && (controlPop.checked
+                                                     || controlPop.highlighted))
                 }
             }
             Label {
@@ -86,8 +90,11 @@ ApplicationWindow {
                 text: qsTr("⋮")
                 font.pointSize: 20
 
-                onClicked: menu.open()
-
+                onClicked:
+                {
+                    //menu.open();
+                    filePicker.visible = false;
+                }
                 contentItem: Text {
                     text: controlSeitting.text
                     font: controlSeitting.font
@@ -106,9 +113,10 @@ ApplicationWindow {
                                          || controlSeitting.highlighted) ? 1.5 : 1.0)
                     opacity: enabled ? 1 : 0.3
                     visible: controlSeitting.down || (controlSeitting.enabled
-                                               && (controlSeitting.checked
-                                                   || controlSeitting.highlighted))
+                                                      && (controlSeitting.checked
+                                                          || controlSeitting.highlighted))
                 }
+
             }
         }
 
@@ -117,86 +125,89 @@ ApplicationWindow {
 
 
     StackView {
-          id: stack
-          initialItem: mainView
-          anchors.fill: parent
+        id: stack
+        initialItem: mainView
+        anchors.fill: parent
 
-          states: State {
-                   name: "stack"
-                   PropertyChanges { target: rect; x: 150 }
-               }
+        states: State {
+            name: "stack"
+            PropertyChanges { target: rect; x: 150 }
+        }
 
-          pushEnter: Transition {
+        pushEnter: Transition {
 
+            PropertyAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
 
-                   PropertyAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
-
-          }
-          pushExit: Transition {
-              PropertyAnimation {
-                  //property: "opacity"
-                  from: 1
-                  to:0
-                  duration: 200
-              }
-          }
-          popEnter: Transition {
-              PropertyAnimation {
-                  //property: "opacity"
-                  from: 0
-                  to:1
-                  duration: 200
-              }
-          }
-          popExit: Transition {
-              PropertyAnimation {
-                 // property: "opacity"
-                  from: 1
-                  to:0
-                  duration: 200
-              }
-          }
-      }
+        }
+        pushExit: Transition {
+            PropertyAnimation {
+                //property: "opacity"
+                from: 1
+                to:0
+                duration: 200
+            }
+        }
+        popEnter: Transition {
+            PropertyAnimation {
+                //property: "opacity"
+                from: 0
+                to:1
+                duration: 200
+            }
+        }
+        popExit: Transition {
+            PropertyAnimation {
+                // property: "opacity"
+                from: 1
+                to:0
+                duration: 200
+            }
+        }
+    }
 
     Component {
         id: mainView
+        Page1Form {
+            id: page1
+            colorBackground: colorBackground
+            colorTittle:  colorTittle
+            anchors.fill: parent
 
-//        Column {
-//            spacing: 10
-
-            Page1Form {
-                colorBackground: colorBackground
-                colorTittle:  colorTittle
-                anchors.fill: parent
-
-            }
-
-//            Button {
-//                text: "Push"
-//                onClicked: stack.push(mainView)
-//            }
-//            Button {
-//                text: "Pop"
-//                enabled: stack.depth > 1
-//                onClicked: stack.pop()
-
-//            }
-//            Text {
-//                text: stack.depth
-//            }
- //       }
+        }
     }
 
+    Component {
+        id: filePicker
+        FilePicker {
+            anchors.fill: parent
+            showDotAndDotDot: true
+            nameFilters: "*.docx"
 
-//    SwipeView {
-//        id: swipeView
-//        anchors.fill: parent
-//        currentIndex: tabBar.currentIndex
+            onFileSelected: {
+                stack.get(0).aim.start();
+                console.log(currentFolder()+ "/" + fileName);
+                controlPop.clicked();
+            }
 
-//        Page1Form {
-//        }
 
-//        Page2Form {
-//        }
-//    }
+        }
+    }
+
+    FileDialog {
+        id: fileDialogWindows
+        folder:StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+
+        onAccepted: {
+
+           // stack.get(0).aim.start();
+
+            stack.get(0).pieBar.begin = "0";
+
+            word.qml_getFileName(fileDialogWindows.file);
+
+            word.qml_StartFind();
+
+            controlPop.clicked();
+        }
+    }
 }

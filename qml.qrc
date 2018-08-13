@@ -6,5 +6,10 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Best.jpg</file>
+        <file>FileDialogs.qml</file>
+        <file>FilePicker.qml</file>
+        <file>utils.js</file>
+        <file>icons/ic_folder_open_black_48dp.png</file>
+        <file>icons/ic_insert_drive_file_black_48dp.png</file>
     </qresource>
 </RCC>

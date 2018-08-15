@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 
 
     QObject::connect(word,&MYWORD::changeWork,wordQMLModel,&WordQMLModel::changeWork);
+    QObject::connect(word,&MYWORD::findData,wordQMLModel,&WordQMLModel::findData);
 
 
     QQmlApplicationEngine engine;

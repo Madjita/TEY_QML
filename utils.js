@@ -28,3 +28,30 @@ function backgroundAltColor() {
 
 var CountLoadingFileBar = 0;
 
+var Rs = 0xe2;
+var Gs = 0xb6;
+var Bs = 0x2f;
+
+var Re = 0x9f;
+var Ge = 0xcd;
+var Be = 0x61;
+
+var stepR = Re-Rs;
+var stepG = Ge-Gs;
+var stepB = Be-Bs;
+
+var Rse =Rs;
+var Gse =Gs;
+var Bse = Bs;
+
+function myColorAnimation(rows)
+{
+    stepR = (Re - Rs) / rows
+    stepG = (Ge - Gs) / rows
+    stepB = (Be - Bs) / rows
+
+    Rse += stepR
+    Gse += stepG
+    Bse += stepB
+}
+

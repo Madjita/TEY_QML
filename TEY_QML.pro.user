@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.7.0, 2018-08-13T15:28:38. -->
+<!-- Written by QtCreator 4.7.0, 2018-08-14T17:17:33. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -620,8 +620,8 @@
     <valuelist type="QVariantList" key="Android.PreStartShellCmdListKey">
      <value type="QString"></value>
     </valuelist>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">TEY_QML</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">TEY_QML</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName"></value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.AndroidRunConfiguration:D:/Work/Qt/QtProject/TEY_QML/TEY_QML.pro</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>

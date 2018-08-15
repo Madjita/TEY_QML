@@ -5356,6 +5356,11 @@ void MYWORD::Findelements_Perechen()
 
     Part("Поиск завершен. Закрытие документа.");
 
+    emit findData(R.count(),C_Z.count(),XP_XS_XW_X.count(),BQ_G.count(),DD.count(),DA.count(),U.count(),L.count(),TV.count(),HL_VD.count(),VT.count());
+
+
+//    emit findData(R,RName,C_Z,C_ZName,XP_XS_XW_X,XP_XS_XW_XName,BQ_G,BQ_GName,DD,DDName,DA,DAName,U,UName,L,LName,TV,TVName,HL_VD,HL_VDName,VT,VTName);
+
 //    qDebug () << QString::number(count_find);
 
 //    qDebug () << R;

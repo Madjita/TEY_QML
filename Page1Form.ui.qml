@@ -141,8 +141,8 @@ Page {
             // @disable-check M223
             onEndChanged: {
 
+                // @disable-check M222
                 console.log("wordQMLModel = " + wordQMLModel.rows * 100)
-
 
                 // @disable-check M223
                 if (wordQMLModel.countBar !== 0) {
@@ -150,15 +150,26 @@ Page {
                     label.text = Math.round(Utils.CountLoadingFileBar) + " %"
                     label.scale = 1.15
 
-                    if (Math.round(Utils.CountLoadingFileBar) <= 25) {
-                        pie.strokeColor = "#f66f75"
-                    } else {
-                        if (Math.round(Utils.CountLoadingFileBar) <= 75) {
-                            pie.strokeColor = "#e2b62f"
-                        } else {
-                            pie.strokeColor = "#9fcd61"
-                        }
-                    }
+                    //                    Utils.stepR = (Utils.Re - Utils.Rs) / wordQMLModel.rows
+                    //                    Utils.stepG = (Utils.Ge - Utils.Gs) / wordQMLModel.rows
+                    //                    Utils.stepB = (Utils.Be - Utils.Bs) / wordQMLModel.rows
+
+                    //                    Utils.Rse += Utils.stepR
+                    //                    Utils.Gse += Utils.stepG
+                    //                    Utils.Bse += Utils.stepB
+
+                    // @disable-check M222
+                    Utils.myColorAnimation(wordQMLModel.rows)
+
+                    // @disable-check M222
+                    console.log(pie.strokeColor)
+
+                    // @disable-check M222
+                    pie.strokeColor = "#" + Math.round(Utils.Rse).toString(
+                                // @disable-check M222
+                                16) + Math.round(Utils.Gse).toString(
+                                // @disable-check M222
+                                16) + Math.round(Utils.Bse).toString(16)
 
                     // @disable-check M223
                 } else {
@@ -166,10 +177,33 @@ Page {
                     pie.begin = "0.0001"
                     pie.strokeColor = "#3f444a"
                     Utils.CountLoadingFileBar = 0
+
+                    Utils.Rse = 0xe2
+                    Utils.Gse = 0xb6
+                    Utils.Bse = 0x2f
+
+                    // @disable-check M222
+                    if (label.text != "Загрузить перечень") // @disable-check M223
+                        // @disable-check M223
+                    {
+
+                        // @disable-check M223
+                        for (var i = 0; i < wordQMLModel.dataFind.count; i++) {
+                            // @disable-check M222
+//                            page2.myModel.append({
+//                                                       "count": wordQMLModel.dataFind[0]
+//                                                   })
+                        }
+
+                        // @disable-check M222
+                        stack.push(mainViewPage2)
+
+                        // @disable-check M222
+                    }
+
                     label.text = "Загрузить перечень"
                 }
             }
-
 
             ColorAnimation {
                 id: aimPie

@@ -177,6 +177,17 @@ ApplicationWindow {
     }
 
     Component {
+        id: mainViewPage2
+        Page2Form {
+            id: page2
+            colorBackground: colorBackground
+            colorTittle:  colorTittle
+            anchors.fill: parent
+
+        }
+    }
+
+    Component {
         id: filePicker
         FilePicker {
             anchors.fill: parent
@@ -188,8 +199,6 @@ ApplicationWindow {
                 console.log(currentFolder()+ "/" + fileName);
                 controlPop.clicked();
             }
-
-
         }
     }
 

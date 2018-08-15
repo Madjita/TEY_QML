@@ -96,7 +96,6 @@ public:
 
 
     //Берем элимент и название с данными
-
     QStringList Find_E;
     QStringList Find_EName;
     QList<QStringList> Find_Data_1;
@@ -142,8 +141,13 @@ signals:
 
     void Part(QString);
 
+
+
     //QML
     void qml_StartFind();
+//    void findData(QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList);
+
+    void findData(int R ,int C_Z,int XP_XS_XW_X,int BQ_G,int DD,int DA,int U,int L,int TV,int HL_VD,int VT);
 
 public slots:
 

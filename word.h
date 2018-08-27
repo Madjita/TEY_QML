@@ -22,7 +22,9 @@ class MYWORD : public QObject
 {
     Q_OBJECT
 public:
-    explicit MYWORD(QString FileDir, QString FileDir_S_R,QString FileDir_XP_XS_XW_X,QString FileDir_C_Z, QString FileDir_BQ,QString FileDir_DA,QString FileDir_U,QString FileDir_L,QString FileDir_DD,QString FileDir_TV,QString fileNames_HL_VD,QString fileNames_VT,QObject *parent = nullptr);
+//    explicit MYWORD(QString FileDir, QString FileDir_S_R,QString FileDir_XP_XS_XW_X,QString FileDir_C_Z, QString FileDir_BQ,QString FileDir_DA,QString FileDir_U,QString FileDir_L,QString FileDir_DD,QString FileDir_TV,QString fileNames_HL_VD,QString fileNames_VT,QObject *parent = nullptr);
+
+   explicit MYWORD(QObject *parent = nullptr);
 
     ~MYWORD();
 
@@ -168,7 +170,7 @@ public slots:
 
     void process_start();
 
-    void SetTemp(int);
+    void setTemp(QString);
 
     void SetDirFindMSWord(QString);
 
@@ -222,6 +224,8 @@ public slots:
 
     //QML
     void qml_getFileName(QString str);
+    QVariant qml_getlistMYWORD();
+    QVariant qml_setChangeListMYWORD(QString index,QString shablonName);
 
 };
 

@@ -5,19 +5,24 @@
 #include <QThread>
 #include <QtCore/qmath.h>
 
-MYWORD::MYWORD(QString _FileDir, QString _FileDir_S_R,QString _FileDir_XP_XS_XW_X,QString _FileDir_C_Z,QString _FileDir_BQ,QString _FileDir_DA,QString _FileDir_U,QString _FileDir_L,QString _FileDir_DD,QString _FileDir_TV,QString _FileNames_HL_VD,QString _FileNames_VT,QObject *parent) : QObject(parent),
-    FileDir(_FileDir),
-    FileDir_S_R(_FileDir_S_R),
-    FileDir_XP_XS_XW_X(_FileDir_XP_XS_XW_X),
-    FileDir_C_Z(_FileDir_C_Z),
-    FileDir_BQ(_FileDir_BQ),
-    FileDir_DA(_FileDir_DA),
-    FileDir_DD(_FileDir_DD),
-    FileDir_U(_FileDir_U),
-    FileDir_L(_FileDir_L),
-    FileDir_TV(_FileDir_TV),
-    FileDir_HL_VD(_FileNames_HL_VD),
-    FileDir_VT(_FileNames_VT),
+//MYWORD::MYWORD(QString _FileDir, QString _FileDir_S_R,QString _FileDir_XP_XS_XW_X,QString _FileDir_C_Z,QString _FileDir_BQ,QString _FileDir_DA,QString _FileDir_U,QString _FileDir_L,QString _FileDir_DD,QString _FileDir_TV,QString _FileNames_HL_VD,QString _FileNames_VT,QObject *parent) : QObject(parent),
+//    FileDir(_FileDir),
+//    FileDir_S_R(_FileDir_S_R),
+//    FileDir_XP_XS_XW_X(_FileDir_XP_XS_XW_X),
+//    FileDir_C_Z(_FileDir_C_Z),
+//    FileDir_BQ(_FileDir_BQ),
+//    FileDir_DA(_FileDir_DA),
+//    FileDir_DD(_FileDir_DD),
+//    FileDir_U(_FileDir_U),
+//    FileDir_L(_FileDir_L),
+//    FileDir_TV(_FileDir_TV),
+//    FileDir_HL_VD(_FileNames_HL_VD),
+//    FileDir_VT(_FileNames_VT),
+
+MYWORD::MYWORD(QObject *parent):
+    QObject(parent),
+    FileDir(""),
+    temp(150),
     stateViewWord(false)
 {
 
@@ -25,7 +30,6 @@ MYWORD::MYWORD(QString _FileDir, QString _FileDir_S_R,QString _FileDir_XP_XS_XW_
 
     connect(this, &MYWORD::qml_StartFind,this,&MYWORD::Work,Qt::QueuedConnection);
     connect(this, &MYWORD::qml_CreateShablon,this,&MYWORD::creatShablon,Qt::QueuedConnection);
-
 
 
 
@@ -42,16 +46,9 @@ MYWORD::MYWORD(QString _FileDir, QString _FileDir_S_R,QString _FileDir_XP_XS_XW_
     listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/HLVDShablon.docx");
 
 
-
-
-
-
     this->moveToThread(new QThread());
-
     connect(this->thread(),&QThread::started,this,&MYWORD::process_start);
-
     this->thread()->start();
-
 
 
 }
@@ -145,9 +142,9 @@ void MYWORD::process_start()
     CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 }
 
-void MYWORD::SetTemp(int R)
+void MYWORD::setTemp(QString R)
 {
-    temp =R;
+    temp = R.toInt();
 }
 
 void MYWORD::SetDirFindMSWord(QString data)
@@ -184,6 +181,27 @@ int MYWORD::getViewFlag()
     }
 
     return 0;
+}
+
+QVariant MYWORD::qml_getlistMYWORD()
+{
+
+    return  QVariant::fromValue(listMYWORD);
+}
+
+QVariant MYWORD::qml_setChangeListMYWORD(QString index, QString shablonName)
+{
+    QString shbalonNameFind = shablonName.split('/').last().split('.').first() ;
+    QString shablonNameState = listMYWORD.value(index.toInt()).split('/').last().split('.').first();
+
+    shablonName.remove(0,8);
+
+    if(shbalonNameFind == shablonNameState)
+    {
+        listMYWORD.replace(index.toInt(),shablonName);
+    }
+
+    return  QVariant::fromValue(listMYWORD);
 }
 
 /*
@@ -5758,7 +5776,7 @@ void MYWORD::CreatShablon_R()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_S_R); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[0]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -6062,7 +6080,7 @@ void MYWORD::CreatShablon_C_Z()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject("Documents()"); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_C_Z); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[2]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -6270,7 +6288,7 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_XP_XS_XW_X); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[1]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -6449,7 +6467,7 @@ void MYWORD::CreatShablon_VT()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_VT); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[9]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -6618,7 +6636,7 @@ void MYWORD::CreatShablon_HL_VD()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_HL_VD); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[10]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -6790,7 +6808,7 @@ void MYWORD::CreatShablon_BQ()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_BQ); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[2]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -6962,7 +6980,7 @@ void MYWORD::CreatShablon_DA()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_DA); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[4]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -7131,7 +7149,7 @@ void MYWORD::CreatShablon_DD()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_DD); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[5]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -7300,7 +7318,7 @@ void MYWORD::CreatShablon_U()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_U); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[6]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -7446,7 +7464,7 @@ void MYWORD::CreatShablon_L()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_L); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject( "Open(%T)",listMYWORD[7]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -7628,7 +7646,7 @@ void MYWORD::CreatShablon_TV()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject("Open(%T)",FileDir_TV); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject("Open(%T)",listMYWORD[8]); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");

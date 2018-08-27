@@ -2,6 +2,9 @@ import QtQuick 2.11
 import QtQuick.Controls 2.2
 
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
+
+import Qt.labs.platform 1.0
 
 Page {
     id: page
@@ -30,67 +33,148 @@ Page {
         color: colorTittle
     }
 
-//    ListView
-//    {
-//        id: listSeitings
-//        anchors.fill: parent
+    //    ListView
+    //    {
+    //        id: listSeitings
+    //        anchors.fill: parent
 
-//    }
+    //    }
 
-    CheckBox {
-        id: checkBox
-        text: qsTr("Отобразить Word")
-        checkState: word.getViewFlag()
-        contentItem: Text {
-                  text: checkBox.text
-                  font: checkBox.font
-                  color: colorTittle
-                  verticalAlignment: Text.AlignVCenter
-                  leftPadding: checkBox.indicator.width + checkBox.spacing
-              }
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 5
 
-        onCheckedChanged: {
-            word.setViewFlag(checkBox.checkState);
+        CheckBox {
+            id: checkBox
+            text: qsTr("Отобразить Word")
+            Layout.fillWidth: false
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            checkState: word.getViewFlag()
+            contentItem: Text {
+                text: checkBox.text
+                font: checkBox.font
+                color: colorTittle
+                verticalAlignment: Text.AlignVCenter
+                leftPadding: checkBox.indicator.width + checkBox.spacing
+            }
+
+            onCheckedChanged: {
+                word.setViewFlag(checkBox.checkState);
+            }
+
+
         }
 
+        RowLayout {
+            transformOrigin: Item.Center
+            Layout.fillWidth: false
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
 
+            Label {
+                id: label
+                color: "#ffffff"
+                text: qsTr("Температура кружающей среды")
+                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                Layout.fillWidth: false
+                Layout.preferredHeight: 37
+                Layout.preferredWidth: 106
+                horizontalAlignment: Text.AlignHCenter
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            }
+
+            TextField {
+                id: textField_Temprature
+                text: qsTr("150")
+                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                Layout.fillWidth: false
+                Layout.preferredHeight: 27
+                Layout.preferredWidth: 58
+
+
+
+                onTextChanged: {
+                    word.setTemp(textField_Temprature.text);
+                    console.log("Temprature = " + textField_Temprature.text);
+                }
+            }
+        }
+
+        ListView {
+            id: listView
+            x: 0
+            y: 0
+            width: 110
+            height: 160
+            clip: true
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            model: word.qml_getlistMYWORD()
+            delegate: Item {
+                id: item1
+                x: 5
+                height: 60
+                Row {
+                    id: row1
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+
+                    Text {
+                        width: 100
+                        text: model.modelData.split('/')[model.modelData.split('/').length-1].split('.')[0] +":"
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                        font.bold: true
+                        color: "#ffffff"
+                    }
+
+
+                    Text {
+                        width: page.contentWidth/3 + (page.contentWidth/3-100)
+                        text: model.modelData
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: "#ffffff"
+                    }
+
+                    Button{
+                        height: 30
+                        width: page.contentWidth/3 -50
+                        text: qsTr("Задать")
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+
+
+                        onClicked: {
+                            fileDialogChangeShablon.open();
+
+                        }
+
+                        FileDialog {
+                            id: fileDialogChangeShablon
+                            folder:StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+
+                            onAccepted: {
+
+                                        listView.model = word.qml_setChangeListMYWORD(index.toString(),fileDialogChangeShablon.file);
+
+                            }
+                        }
+
+                    }
+
+                    spacing: 10
+                }
+            }
+        }
     }
 
-//    ColumnLayout {
-//        id: flow1
-//        anchors.rightMargin: 10
-//        anchors.leftMargin: 10
-//        anchors.fill: parent
-
-//        RowLayout{
-
-//            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-//            Layout.preferredWidth: flow1.width
-
-//            spacing: 10
-//            Label {
-//                id: label
-//                text: qsTr("RShablon")
-//                verticalAlignment: Text.AlignTop
-//                horizontalAlignment: Text.AlignHCenter
-//                color: "#ffffff"
-//                Layout.preferredWidth: 100
-//            }
-
-//            TextField {
-//                id: textField
-//                text: qsTr("Text Field")
-//                Layout.fillWidth: true
-//            }
-
-//            Button {
-//                id: button
-//                text: qsTr("Button")
-//                Layout.fillWidth: true
-//            }
-//        }
-
-//    }
 
 
 }
+
+/*##^## Designer {
+    D{i:8;anchors_x:0;anchors_y:0}
+}
+ ##^##*/

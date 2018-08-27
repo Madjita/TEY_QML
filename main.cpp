@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    QLoggingCategory::setFilterRules("*.debug=false\n"
-                                           "driver.usb.debug=true");
+//    QLoggingCategory::setFilterRules("*.debug=false\n"
+//                                           "driver.usb.debug=true");
 
 
     MYWORD* word = new MYWORD();

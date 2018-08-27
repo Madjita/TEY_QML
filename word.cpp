@@ -147,6 +147,11 @@ void MYWORD::setTemp(QString R)
     temp = R.toInt();
 }
 
+QString MYWORD::getTemp()
+{
+    return QString::number(temp);
+}
+
 void MYWORD::SetDirFindMSWord(QString data)
 {
     FileDir_FindMSWord = data;

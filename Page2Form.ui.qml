@@ -10,17 +10,20 @@ import "utils.js" as Utils
 
 Page {
     id: page
+    objectName: "pageSecond"
     contentHeight: parent.height
-    contentWidth:  parent.width
+    contentWidth: parent.width
     smooth: false
     antialiasing: false
-
 
     property string colorBackground: "#272c32"
     property string colorTittle: "#f6fbff"
     property bool selected: false
 
     property ListModel myModel: myModel
+
+    property Button startButton: button
+    property Button endButton: buttonCompleted
 
     // property PieItem pieBar: pie
     background: Rectangle {
@@ -75,32 +78,35 @@ Page {
                     // @disable-check M223
                     onTextChanged: {
 
-                        if(model.modelData.myPercent === "100.00")
-                            // @disable-check M223
+                        if (model.modelData.myPercent === "100.00") // @disable-check M223
                         {
                             // @disable-check M222
-                            console.log("MY 360 GR");
-                            Utils.Rse =Utils.Rs;
-                            Utils.Gse =Utils.Gs;
-                            Utils.Bse = Utils.Bs;
+                            console.log("MY 360 GR")
+                            Utils.Rse = Utils.Rs
+                            Utils.Gse = Utils.Gs
+                            Utils.Bse = Utils.Bs
+
+                            // @disable-check M222
+                            console.log("index = ", index)
+                            // @disable-check M222
+                            console.log("wordQMLModel.dataList.length-1 = ",
+                                        wordQMLModel.dataList.length - 1)
+
+                            if (index === wordQMLModel.dataList.length - 1) // @disable-check M223
+                            {
+                                controlPop.visible = true
+                                buttonCompleted.visible = true
+                            }
+                        } else // @disable-check M223
+                        {
+                            controlPop.visible = false
+                            buttonCompleted.visible = false
                         }
                     }
                 }
-                //                Text {
-                //                    text: model.modelData.myCount
-                //                    horizontalAlignment: Text.AlignHCenter
-                //                    anchors.right: parent.right
-                //                    anchors.rightMargin: 15
-                //                    anchors.left: parent.left
-                //                    anchors.leftMargin: 15
 
-                //                    anchors.horizontalCenter: parent.horizontalCenter
-                //                    anchors.verticalCenter:  parent.verticalCenter
-
-                //                    color: colorTittle
-                //                }
                 Text {
-                    text: model.modelData.myName + ": "+model.modelData.myCount
+                    text: model.modelData.myName + ": " + model.modelData.myCount
                     font.pointSize: myGrid.cellHeight / 15
                     horizontalAlignment: Text.AlignHCenter
                     color: "#b8bdc3"
@@ -137,8 +143,6 @@ Page {
                     // @disable-check M223
                     if (model.modelData.myPercentBar !== 360) {
 
-
-
                         // @disable-check M222
                         Utils.myColorAnimation(model.modelData.myCountMax)
 
@@ -147,27 +151,21 @@ Page {
 
                         // @disable-check M222
                         this.strokeColor = "#" + Math.round(Utils.Rse).toString(
-                                    // @disable-check M222
-                                    16) + Math.round(Utils.Gse).toString(
-                                    // @disable-check M222
-                                    16) + Math.round(Utils.Bse).toString(16)
+                                 // @disable-check M222
+                                 16) + Math.round(Utils.Gse).toString(
+                                 // @disable-check M222
+                                 16) + Math.round(Utils.Bse).toString(16)
                     }
-
                 }
-
-
 
                 // @disable-check M223
                 Component.onCompleted: {
-                    Utils.Rse =Utils.Rs;
-                    Utils.Gse =Utils.Gs;
-                    Utils.Bse = Utils.Bs;
-
+                    Utils.Rse = Utils.Rs
+                    Utils.Gse = Utils.Gs
+                    Utils.Bse = Utils.Bs
                 }
             }
         }
-
-        focus: true
     }
 
     Button {
@@ -180,12 +178,29 @@ Page {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
 
+        // @disable-check M223
+        onClicked: {
+            // @disable-check M222
+            word.qml_CreateShablon()
+            button.visible = false
+            controlPop.visible = false
+        }
+    }
+    Button {
+        id: buttonCompleted
+        text: qsTr("‹ Карты созданны.")
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        visible: false
 
         // @disable-check M223
         onClicked: {
             // @disable-check M222
-            word.qml_CreateShablon();
-            button.visible = false;
+            controlPop.clicked()
         }
     }
 

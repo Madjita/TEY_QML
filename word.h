@@ -171,6 +171,7 @@ public slots:
     void process_start();
 
     void setTemp(QString);
+    QString getTemp();
 
     void SetDirFindMSWord(QString);
 

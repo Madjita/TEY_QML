@@ -48,16 +48,21 @@ ApplicationWindow {
                 id: controlPop
                 text: qsTr("‹")
                 font.pointSize: 20
-                visible: stack.depth > 1;
+                visible: false;
 
 
                 onClicked: {
                     stack.pop();
-
-                    if(stack.depth < 1)
+                    console.log("stack.depth = ",stack.depth);
+                    if(stack.depth <= 1)
                     {
                        controlPop.visible = false;
+                       controlSeitting.visible = true;
                     }
+
+
+
+
                 }
 
                 contentItem: Text {
@@ -105,9 +110,12 @@ ApplicationWindow {
                     //menu.open();
                     //filePicker.visible = false;
 
-                    if(stack.depth < 3)
+                    console.log("stack.depth = ",stack.depth);
+                    stack.push(mainViewPageSeittings);
+                    if(stack.depth == 2)
                     {
-                      stack.push(mainViewPageSeittings);
+                      controlSeitting.visible = false;
+                      controlPop.visible = true;
                     }
 
                 }
@@ -150,6 +158,34 @@ ApplicationWindow {
             PropertyChanges { target: rect; x: 150 }
         }
 
+        focus: true
+
+        Keys.onReturnPressed:  {
+
+            if(stack.get(0).objectName ==="pageFirst" && stack.depth <= 1)
+            {
+
+                stack.get(0).startWork.clicked(this);
+            }
+
+            if(stack.get(1).objectName ==="pageSecond" && stack.get(1).startButton.visible === true)
+            {
+
+                stack.get(1).startButton.clicked(this);
+            }
+
+            if(stack.get(1).objectName ==="pageSecond" && stack.get(1).endButton.visible === true)
+            {
+
+                stack.get(1).endButton.clicked(this);
+            }
+
+
+
+              console.log("enter",stack.get(1).objectName);
+        }
+
+
         pushEnter: Transition {
                  PropertyAnimation {
                      property: "opacity"
@@ -184,13 +220,14 @@ ApplicationWindow {
              }
     }
 
+
+
     Component {
         id: mainView
         Page1Form {
             id: page1
             colorBackground: colorBackground
             colorTittle:  colorTittle
-
         }
     }
 
@@ -244,7 +281,14 @@ ApplicationWindow {
             word.qml_StartFind();
 
             controlPop.clicked();
+            controlSeitting.visible = false;
+
 
         }
     }
+
+
+
+
+
 }

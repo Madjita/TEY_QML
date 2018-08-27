@@ -84,11 +84,12 @@ Page {
 
             TextField {
                 id: textField_Temprature
-                text: qsTr("150")
+                text: qsTr(word.getTemp())
                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                 Layout.fillWidth: false
                 Layout.preferredHeight: 27
                 Layout.preferredWidth: 58
+                selectByMouse: true
 
 
 
@@ -96,6 +97,17 @@ Page {
                     word.setTemp(textField_Temprature.text);
                     console.log("Temprature = " + textField_Temprature.text);
                 }
+
+
+                MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.IBeamCursor
+                        acceptedButtons: Qt.NoButton
+
+                        onDoubleClicked: {
+                            textField_Temprature.selectAll();
+                        }
+                    }
             }
         }
 

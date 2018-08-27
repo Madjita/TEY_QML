@@ -10,8 +10,9 @@ import "utils.js" as Utils
 
 Page {
     id: page
+    objectName: "pageFirst"
     contentHeight: parent.height
-    contentWidth:  parent.width
+    contentWidth: parent.width
     smooth: false
     antialiasing: false
 
@@ -22,6 +23,7 @@ Page {
     property ParallelAnimation aim: aim
 
     property PieItem pieBar: pie
+    property MouseArea startWork: mouseAreaStart
 
     background: Rectangle {
         anchors.fill: parent
@@ -44,7 +46,7 @@ Page {
 
         MouseArea {
             anchors.fill: parent
-
+            id: mouseAreaStart
             // @disable-check M223
             onClicked: {
                 // @disable-check M223
@@ -181,7 +183,7 @@ Page {
                         // @disable-check M222
                         stack.push(mainViewPage2)
 
-                        controlPop.visible = true;
+                        controlPop.visible = true
 
                         // @disable-check M222
                     }
@@ -190,55 +192,55 @@ Page {
                 }
             }
 
-//            // @disable-check M221
-//            ParallelAnimation {
-//                id: aim
-//                objectName: "aimBar"
+            //            // @disable-check M221
+            //            ParallelAnimation {
+            //                id: aim
+            //                objectName: "aimBar"
 
-//                // @disable-check M221
-//                SequentialAnimation {
-//                    ColorAnimation {
-//                        target: pie
-//                        property: "strokeColor"
-//                        from: "#e2b62f"
-//                        to: "#9fcd61"
-//                        duration: 3600
-//                    }
-//                    ColorAnimation {
-//                        target: pie
-//                        property: "strokeColor"
-//                        from: "#9fcd61"
-//                        to: colorBackground
-//                        duration: 3600 / 4 + 100
-//                    }
-//                }
+            //                // @disable-check M221
+            //                SequentialAnimation {
+            //                    ColorAnimation {
+            //                        target: pie
+            //                        property: "strokeColor"
+            //                        from: "#e2b62f"
+            //                        to: "#9fcd61"
+            //                        duration: 3600
+            //                    }
+            //                    ColorAnimation {
+            //                        target: pie
+            //                        property: "strokeColor"
+            //                        from: "#9fcd61"
+            //                        to: colorBackground
+            //                        duration: 3600 / 4 + 100
+            //                    }
+            //                }
 
-//                // @disable-check M221
-//                SequentialAnimation {
-//                    NumberAnimation {
-//                        target: pie
-//                        property: "end"
-//                        from: 0
-//                        to: 360
-//                        duration: 3600
-//                    }
-//                    NumberAnimation {
-//                        target: pie
-//                        property: "begin"
-//                        from: 0
-//                        to: 360
-//                        duration: 3600 / 4
-//                    }
-//                    NumberAnimation {
-//                        target: pie
-//                        property: "begin"
-//                        from: 0
-//                        to: 0
-//                        duration: 1
-//                    }
-//                }
-//                loops: Animation.Infinite
-//            }
+            //                // @disable-check M221
+            //                SequentialAnimation {
+            //                    NumberAnimation {
+            //                        target: pie
+            //                        property: "end"
+            //                        from: 0
+            //                        to: 360
+            //                        duration: 3600
+            //                    }
+            //                    NumberAnimation {
+            //                        target: pie
+            //                        property: "begin"
+            //                        from: 0
+            //                        to: 360
+            //                        duration: 3600 / 4
+            //                    }
+            //                    NumberAnimation {
+            //                        target: pie
+            //                        property: "begin"
+            //                        from: 0
+            //                        to: 0
+            //                        duration: 1
+            //                    }
+            //                }
+            //                loops: Animation.Infinite
+            //            }
         }
     }
 }

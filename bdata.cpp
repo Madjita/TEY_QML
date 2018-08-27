@@ -2,7 +2,8 @@
 #include <QTimer>
 #include <QTime>
 
-BData::BData()
+BData::BData():
+model(nullptr)
 {
    /* this->moveToThread(new QThread());
     connect(this->thread(),&QThread::started,this,&BData::process_start);
@@ -167,7 +168,10 @@ void BData::addLink()
 
 QSqlQueryModel* BData::getInquiry(QString inquiry)
 {
-    QSqlQueryModel* model = new QSqlQueryModel(this);
+    if(model != nullptr)
+        delete model;
+
+    model = new QSqlQueryModel(this);
     model->setQuery(inquiry);
 
     qDebug () << "BData = " << model->rowCount();
@@ -191,8 +195,6 @@ QString BData::create(QString name, QVector<QString> list)
 
     query->exec(data);
 
-
-
     QString error = query->lastError().databaseText();
 
     if(error != "")
@@ -210,8 +212,6 @@ QSqlQuery BData::zapros(QString data)
     {
         query = new QSqlQuery(db);
     }
-
-
 
     query->exec(data);
 

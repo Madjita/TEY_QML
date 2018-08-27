@@ -20,6 +20,7 @@ class BData : public QObject
 {
     Q_OBJECT
 
+
 public:
     BData();
 
@@ -32,6 +33,8 @@ public:
     //Запрос к базе
     QSqlQuery* query;
     QSqlQueryModel* queryModel;
+
+    QSqlQueryModel* model;
 
 
 public slots:

@@ -24,6 +24,26 @@ MYWORD::MYWORD(QString _FileDir, QString _FileDir_S_R,QString _FileDir_XP_XS_XW_
     saveDir = QDir::currentPath();
 
     connect(this, &MYWORD::qml_StartFind,this,&MYWORD::Work,Qt::QueuedConnection);
+    connect(this, &MYWORD::qml_CreateShablon,this,&MYWORD::creatShablon,Qt::QueuedConnection);
+
+
+
+
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/RShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/XPXSXWShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/CZShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/BQGShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/DAShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/DDShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/UShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/LShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/TVShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/VTShablon.docx");
+    listMYWORD << QDir::currentPath()+QString("/Shablon")+QString("/HLVDShablon.docx");
+
+
+
+
 
 
     this->moveToThread(new QThread());
@@ -34,6 +54,12 @@ MYWORD::MYWORD(QString _FileDir, QString _FileDir_S_R,QString _FileDir_XP_XS_XW_
 
 
 
+}
+
+MYWORD::~MYWORD()
+{
+    this->thread()->exit();
+    delete this;
 }
 
 void MYWORD::setBD(BData *_data)
@@ -110,11 +136,13 @@ void MYWORD::setBD(BData *_data)
         c_avx_TemperatureRange << model->record(i).value("TemperatureRange").toString();
     }
 
+    delete model;
+
 }
 
 void MYWORD::process_start()
 {
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 }
 
 void MYWORD::SetTemp(int R)
@@ -134,12 +162,31 @@ void MYWORD::Work()
 
     // CoInitialize(0);
 
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     OpenWord_Perechen();
 }
 
+void MYWORD::setViewFlag(int flag)
+{
+    switch (flag) {
+        case 0: stateViewWord = false;break;
+        case 2: stateViewWord = true;break;
+    }
 
+}
+
+int MYWORD::getViewFlag()
+{
+    if(stateViewWord)
+    {
+        return 2;
+    }
+
+    return 0;
+}
+
+/*
 void MYWORD::WorkFind()
 {
     QAxObject* WordApplication_2 = new QAxObject("Word.Application"); // Создаю интерфейс к MSWord
@@ -148,7 +195,7 @@ void MYWORD::WorkFind()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_FindMSWord); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject("Open(%T)",FileDir_FindMSWord); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
@@ -212,9 +259,9 @@ void MYWORD::WorkFind()
 
         //Cбор данных
 
-        auto columns = Tables_2->querySubObject("Columns")->property("Count").toInt();
+       // int columns = Tables_2->querySubObject("Columns")->property("Count").toInt();
 
-        auto rows = Tables_2->querySubObject("Rows")->property("Count").toInt();
+       // int rows = Tables_2->querySubObject("Rows")->property("Count").toInt();
 
 
         if(FileDir_FindMSWord.split('/').last() == "XPXSXW.docx")
@@ -1719,10 +1766,10 @@ void MYWORD::WorkFind()
 
 
 
-        // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+        // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-        ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+        ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
 
@@ -1742,11 +1789,8 @@ void MYWORD::WorkFind()
             {
 
                 selection_2->dynamicCall("EndKey(wdStory)");
-
                 selection_2->dynamicCall("InsertBreak()");
-
-
-                selection_2->querySubObject( "Paste()");
+                selection_2->dynamicCall("Paste()");
 
             }
         }
@@ -1756,10 +1800,8 @@ void MYWORD::WorkFind()
             {
 
                 selection_2->dynamicCall("EndKey(wdStory)");
-
                 selection_2->dynamicCall("InsertBreak()");
-
-                selection_2->querySubObject( "Paste()");
+                selection_2->dynamicCall("Paste()");
 
             }
         }
@@ -2676,10 +2718,10 @@ void MYWORD::WorkFind()
 
 
 
-        // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+        // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-        ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+        ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
 
@@ -2703,7 +2745,7 @@ void MYWORD::WorkFind()
                 selection_2->dynamicCall("InsertBreak()");
 
 
-                selection_2->querySubObject( "Paste()");
+                selection_2->dynamicCall("Paste()");
 
             }
         }
@@ -2716,7 +2758,7 @@ void MYWORD::WorkFind()
 
                 selection_2->dynamicCall("InsertBreak()");
 
-                selection_2->querySubObject( "Paste()");
+                selection_2->dynamicCall("Paste()");
 
             }
         }
@@ -3646,7 +3688,7 @@ void MYWORD::WorkFind()
 
 
 }
-
+*/
 void MYWORD::qml_getFileName(QString str)
 {
     FileDir = str;
@@ -3743,10 +3785,10 @@ void MYWORD::OpenWord()
 
 
 
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+    // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
 
@@ -3767,12 +3809,8 @@ void MYWORD::OpenWord()
     {
 
         selection_2->dynamicCall("EndKey(wdStory)");
-
         selection_2->dynamicCall("InsertBreak()");
-
-
-        selection_2->querySubObject( "Paste()");
-
+        selection_2->dynamicCall("Paste()");
     }
 
 
@@ -5358,87 +5396,15 @@ void MYWORD::Findelements_Perechen()
 
     emit findData(R.count(),C_Z.count(),XP_XS_XW_X.count(),BQ_G.count(),DD.count(),DA.count(),U.count(),L.count(),TV.count(),HL_VD.count(),VT.count());
 
-
-//    emit findData(R,RName,C_Z,C_ZName,XP_XS_XW_X,XP_XS_XW_XName,BQ_G,BQ_GName,DD,DDName,DA,DAName,U,UName,L,LName,TV,TVName,HL_VD,HL_VDName,VT,VTName);
-
-//    qDebug () << QString::number(count_find);
-
-//    qDebug () << R;
-
-//    qDebug () << RName;
-
-
-//    qDebug () << "=============================";
-
-//    qDebug () << C_Z.count();
-
-//    qDebug () << C_Z;
-
-//    qDebug () << C_ZName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << XP_XS_XW_X.count();
-
-//    qDebug () << XP_XS_XW_X;
-
-//    qDebug () << XP_XS_XW_XName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << BQ_G.count();
-
-//    qDebug () << BQ_G;
-
-//    qDebug () << BQ_GName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << DA.count();
-
-//    qDebug () << DA;
-
-//    qDebug () << DAName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << U.count();
-
-//    qDebug () << U;
-
-//    qDebug () << UName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << L.count();
-
-//    qDebug () << L;
-
-//    qDebug () << LName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << DD.count();
-
-//    qDebug () << DD;
-
-//    qDebug () << DDName;
-
-//    qDebug () << "=============================";
-
-//    qDebug () << TV.count();
-
-//    qDebug () << TV;
-
-//    qDebug () << TVName;
-
-
     //ActiveDocument->dynamicCall("Close (boolean)", false);
 
     WordApplication->dynamicCall("Quit (void)");
 
 
-    // CreatShablon();
+    delete WordApplication;
+
+
+    // creatShablon();
 
 }
 
@@ -5511,17 +5477,16 @@ bool MYWORD::findRussianLanguage(QString text)
     return false;
 }
 
-void MYWORD::CreatShablon()
+void MYWORD::creatShablon()
 {
+    Part("Создание шаблона с R. ["+saveDir+"//R]");
 
-    Part("Создание шаблона с XP XS XW. ["+saveDir+"//XPXSXW]");
-
-    if(XP_XS_XW_X.count() > 0)
+    if(R.count() > 0)
     {
-        CreatShablon_XP_XS_XW_X();
+        CreatShablon_R();
     }
 
-    //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
 
     Part("Создание шаблона с С Z. ["+saveDir+"//СZ]");
 
@@ -5530,7 +5495,16 @@ void MYWORD::CreatShablon()
         CreatShablon_C_Z();
     }
 
-     //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
+
+    Part("Создание шаблона с XP XS XW X. ["+saveDir+"//XPXSXWX]");
+
+    if(XP_XS_XW_X.count() > 0)
+    {
+        CreatShablon_XP_XS_XW_X();
+    }
+
+   //this->thread()->msleep(10);
 
     Part("Создание шаблона с BQ. ["+saveDir+"//BQ]");
 
@@ -5539,16 +5513,7 @@ void MYWORD::CreatShablon()
         CreatShablon_BQ();
     }
 
-     //this->thread()->msleep(150);
-
-    Part("Создание шаблона с DA. ["+saveDir+"//DA]");
-
-    if(DA.count() > 0)
-    {
-        CreatShablon_DA();
-    }
-
-     //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
 
     Part("Создание шаблона с DD. ["+saveDir+"//DD]");
 
@@ -5557,7 +5522,17 @@ void MYWORD::CreatShablon()
         CreatShablon_DD();
     }
 
-     //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
+
+    Part("Создание шаблона с DA. ["+saveDir+"//DA]");
+
+    if(DA.count() > 0)
+    {
+        CreatShablon_DA();
+    }
+
+    //this->thread()->msleep(10);
+
 
     Part("Создание шаблона с U. ["+saveDir+"//U]");
 
@@ -5566,7 +5541,7 @@ void MYWORD::CreatShablon()
         CreatShablon_U();
     }
 
-     //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
 
     Part("Создание шаблона с L. ["+saveDir+"//L]");
 
@@ -5575,7 +5550,7 @@ void MYWORD::CreatShablon()
         CreatShablon_L();
     }
 
-     //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
 
     Part("Создание шаблона с TV. ["+saveDir+"//TV]");
 
@@ -5584,25 +5559,7 @@ void MYWORD::CreatShablon()
         CreatShablon_TV();
     }
 
-     //this->thread()->msleep(150);
-
-    Part("Создание шаблона с R. ["+saveDir+"//R]");
-
-    if(R.count() > 0)
-    {
-        CreatShablon_R();
-    }
-
-     //this->thread()->msleep(150);
-
-    Part("Создание шаблона с VT. ["+saveDir+"//VT]");
-
-    if(VT.count() > 0)
-    {
-        CreatShablon_VT();
-    }
-
-     //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
 
     Part("Создание шаблона с HL VD. ["+saveDir+"//HLVD]");
 
@@ -5611,7 +5568,17 @@ void MYWORD::CreatShablon()
         CreatShablon_HL_VD();
     }
 
-    //this->thread()->msleep(150);
+    //this->thread()->msleep(10);
+
+    Part("Создание шаблона с VT. ["+saveDir+"//VT]");
+
+    if(VT.count() > 0)
+    {
+        CreatShablon_VT();
+    }
+
+    //this->thread()->msleep(10);
+
 
     R.clear();      //отчистка резисторы
     RName.clear();  //отчистка имя резисторов
@@ -5796,15 +5763,11 @@ void MYWORD::CreatShablon_R()
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
-
-
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
-
-
-
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//R");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//R");
 
 
 
@@ -5814,21 +5777,7 @@ void MYWORD::CreatShablon_R()
 
 
 
-    qDebug() <<"R.count()/3 = " << QString::number(R.count()/3);
-
-
-
-    //    for(int i=1; i < (R.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
+    qDebug () << "Example R: " << (R.count()%3) << " ; " <<  (R.count()/3)+1 << " ; " << (R.count()/3);
 
 
     if((R.count()%3) > 0 )
@@ -5837,12 +5786,11 @@ void MYWORD::CreatShablon_R()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateR(QString::number(i));
         }
     }
     else
@@ -5851,34 +5799,19 @@ void MYWORD::CreatShablon_R()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateR(QString::number(i));
         }
     }
-
-
-
-    //    QAxObject* Tables_2 = ActiveDocument_2->querySubObject("Tables(1)");
-
-
-
-    //    QAxObject* StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2 = StartCell_2->querySubObject("Range()");
-
-    //    QAxObject* StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 2, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-
 
 
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -5896,6 +5829,9 @@ void MYWORD::CreatShablon_R()
 
     for(int i=0;i < R.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateR(QString::number(i+1));
+
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -5908,81 +5844,79 @@ void MYWORD::CreatShablon_R()
 
         CellRange_2_3->dynamicCall("InsertAfter(Text)", RName[i]);
 
-        //Темпиратура
-
 
         switch (flag) {
 
-        case 1:
-        {
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 4);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+            case 1:
+            {
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 4);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
 
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
-
-
-            //////////////////////
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 16, 4);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-            CellRange_2_3->dynamicCall("InsertAfter(Text)",addData_R_Power_NTD(i));
-
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 5);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_TemperatureRange_NTD(i));
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
 
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 5);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_U_NTD(i,addData_R_Power_NTD(i).toDouble()));
+                //////////////////////
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 16, 4);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+
+                CellRange_2_3->dynamicCall("InsertAfter(Text)",addData_R_Power_NTD(i));
+
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 5);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_TemperatureRange_NTD(i));
 
 
-            break;
-        }
-        case 2:
-        {
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 6);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 5);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_U_NTD(i,addData_R_Power_NTD(i).toDouble()));
 
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
 
-            //////////////////////
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 16, 6);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_Power_NTD(i));
+                break;
+            }
+            case 2:
+            {
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 6);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 7);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_TemperatureRange_NTD(i));
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 7);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_U_NTD(i,addData_R_Power_NTD(i).toDouble()));
+                //////////////////////
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 16, 6);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_Power_NTD(i));
 
-            break;
-        }
-        case 3:
-        {
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 8);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 7);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_TemperatureRange_NTD(i));
 
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 7);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_U_NTD(i,addData_R_Power_NTD(i).toDouble()));
 
-            //////////////////////
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 16, 8);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_Power_NTD(i));
+                break;
+            }
+            case 3:
+            {
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 8);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 9);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_TemperatureRange_NTD(i));
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 9);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_U_NTD(i,addData_R_Power_NTD(i).toDouble()));
+                //////////////////////
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 16, 8);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_Power_NTD(i));
 
-            break;
-        }
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 14, 9);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_TemperatureRange_NTD(i));
+
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 9);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_R_U_NTD(i,addData_R_Power_NTD(i).toDouble()));
+
+                break;
+            }
 
         }
 
@@ -5994,7 +5928,9 @@ void MYWORD::CreatShablon_R()
             flag =0;
 
             k++;
-            if(k > (R.count()/3)+1 )
+
+
+            if((R.count()%3) > 0  && k > (R.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -6002,9 +5938,16 @@ void MYWORD::CreatShablon_R()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((R.count()%3) == 0  && k > (R.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -6025,6 +5968,9 @@ void MYWORD::CreatShablon_R()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
    if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+
+   delete WordApplication_2;
 }
 
 QString MYWORD::addData_C_Power_NTD(int i)
@@ -6114,7 +6060,7 @@ void MYWORD::CreatShablon_C_Z()
 
     WordApplication_2->setProperty("Visible", stateViewWord);
 
-    QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
+    QAxObject* WordDocuments_2 = WordApplication_2->querySubObject("Documents()"); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
     WordDocuments_2->querySubObject( "Open(%T)",FileDir_C_Z); //D:\\11111\\One.docx
 
@@ -6123,12 +6069,14 @@ void MYWORD::CreatShablon_C_Z()
 
 
 
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+    // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//CZ");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//CZ");
 
 
 
@@ -6139,48 +6087,31 @@ void MYWORD::CreatShablon_C_Z()
 
 
 
-    qDebug() <<"C_Z.count()/3 = " << QString::number(C_Z.count()/3);
-
-
-
-    //    for(int i=1; i < (C_Z.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
+     qDebug () << "Example C_Z: " << (C_Z.count()%3) << " ; " <<  (C_Z.count()/3)+1 << " ; " << (C_Z.count()/3);
 
     if((C_Z.count()%3) > 0 )
     {
         for(int i=1; i < (C_Z.count()/3)+1;i++)
         {
-
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
 
-            selection_2->querySubObject( "Paste()");
-
+            emit updateC_Z(QString::number(i));
         }
     }
     else
     {
         for(int i=1; i < (C_Z.count()/3);i++)
         {
-
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateC_Z(QString::number(i));
         }
     }
 
@@ -6188,7 +6119,7 @@ void MYWORD::CreatShablon_C_Z()
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -6206,6 +6137,9 @@ void MYWORD::CreatShablon_C_Z()
 
     for(int i=0;i < C_Z.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateC_Z(QString::number(i));
+
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -6224,69 +6158,69 @@ void MYWORD::CreatShablon_C_Z()
 
         switch (flag) {
 
-        case 1:
-        {
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 4); // (ячейка C1)
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+            case 1:
+            {
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 4); // (ячейка C1)
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
 
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 5);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_Power_NTD(i));
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 5);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_Power_NTD(i));
 
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 5);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_TemperatureRange_NTD(i));
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 5);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_TemperatureRange_NTD(i));
 
-            break;
+                break;
+            }
+            case 2:
+            {
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 6); // (ячейка C1)
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
+
+
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 7);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_Power_NTD(i));
+
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 7);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_TemperatureRange_NTD(i));
+
+                break;
+            }
+            case 3:
+            {
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 8); // (ячейка C1)
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
+
+
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 9);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_Power_NTD(i));
+
+                StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 9);
+                CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
+                CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_TemperatureRange_NTD(i));
+
+                break;
+            }
+
         }
-        case 2:
-        {
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 6); // (ячейка C1)
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
-
-
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 7);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_Power_NTD(i));
-
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 7);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_TemperatureRange_NTD(i));
-
-            break;
-        }
-        case 3:
-        {
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 8); // (ячейка C1)
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", QString::number(temp));
-
-
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 4, 9);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_Power_NTD(i));
-
-            StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 15, 9);
-            CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-            CellRange_2_3->dynamicCall("InsertAfter(Text)", addData_C_TemperatureRange_NTD(i));
-
-            break;
-        }
-
-        }
-
 
         if(flag == 3)
         {
             flag =0;
 
             k++;
-            if(k > (C_Z.count()/3)+1 )
+
+            if((C_Z.count()%3) > 0  && k > (C_Z.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -6294,11 +6228,17 @@ void MYWORD::CreatShablon_C_Z()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((C_Z.count()%3) == 0  && k > (C_Z.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
-
         }
 
     }
@@ -6318,6 +6258,8 @@ void MYWORD::CreatShablon_C_Z()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
     if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+    delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_XP_XS_XW_X()
@@ -6335,12 +6277,14 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
 
 
 
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+    // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//XPXSXWX");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//XPXSXWX");
 
 
 
@@ -6350,47 +6294,31 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
 
 
 
-    qDebug() <<"XP_XS_XW_X.count()/3 = " << QString::number(XP_XS_XW_X.count()/3);
+    qDebug () << "Example XP_XS_XW_X: " << (XP_XS_XW_X.count()%3) << " ; " <<  (XP_XS_XW_X.count()/3)+1 << " ; " << (XP_XS_XW_X.count()/3);
 
-
-
-    //    for(int i=1; i < (XP_XS_XW_X.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
 
     if((XP_XS_XW_X.count()%3) > 0 )
     {
         for(int i=1; i < (XP_XS_XW_X.count()/3)+1;i++)
         {
-
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateXP_XS_XW_X(QString::number(i));
         }
     }
     else
     {
         for(int i=1; i < (XP_XS_XW_X.count()/3);i++)
         {
-
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateXP_XS_XW_X(QString::number(i));
 
         }
     }
@@ -6400,7 +6328,7 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -6418,6 +6346,8 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
 
     for(int i=0;i < XP_XS_XW_X.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateXP_XS_XW_X(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -6464,13 +6394,13 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
         }
 
 
-
         if(flag == 3)
         {
             flag =0;
 
             k++;
-            if(k > (XP_XS_XW_X.count()/3)+1 )
+
+            if((XP_XS_XW_X.count()%3) > 0  && k > (XP_XS_XW_X.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -6478,11 +6408,17 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((XP_XS_XW_X.count()%3) == 0  && k > (XP_XS_XW_X.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
-
         }
 
     }
@@ -6494,13 +6430,15 @@ void MYWORD::CreatShablon_XP_XS_XW_X()
     //Сохранить pdf
     //   ActiveDocument_2->dynamicCall("ExportAsFixedFormat (const QString&,const QString&)","D://11111//1//XPXSXW" ,"17");//fileName.split('.').first()
 
-    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//XPXSXW");
-    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//XPXSXW");
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//XPXSXWX");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//XPXSXWX");
 
 
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
     if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+    delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_VT()
@@ -6516,24 +6454,27 @@ void MYWORD::CreatShablon_VT()
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
+
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//VT");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//VT");
 
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
+    qDebug () << "Example VT: " << (VT.count()%3) << " ; " <<  (VT.count()/3)+1 << " ; " << (VT.count()/3);
     if((VT.count()%3) > 0 )
     {
         for(int i=1; i < (VT.count()/3)+1;i++)
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateVT(QString::number(i));
         }
     }
     else
@@ -6542,11 +6483,11 @@ void MYWORD::CreatShablon_VT()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateVT(QString::number(i));
 
         }
     }
@@ -6556,7 +6497,7 @@ void MYWORD::CreatShablon_VT()
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -6574,6 +6515,8 @@ void MYWORD::CreatShablon_VT()
 
     for(int i=0;i < VT.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateVT(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -6626,7 +6569,9 @@ void MYWORD::CreatShablon_VT()
             flag =0;
 
             k++;
-            if(k > (VT.count()/3)+1 )
+
+
+            if((VT.count()%3) > 0  && k > (VT.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -6634,17 +6579,21 @@ void MYWORD::CreatShablon_VT()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((VT.count()%3) == 0  && k > (VT.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
 
     }
-
-
-
 
 
     //Сохранить pdf
@@ -6657,6 +6606,8 @@ void MYWORD::CreatShablon_VT()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
     if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+    delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_HL_VD()
@@ -6672,24 +6623,16 @@ void MYWORD::CreatShablon_HL_VD()
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
+
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//HLVD");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//HLVD");
 
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
-    //    for(int i=1; i < (VT.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
-
+    qDebug () << "Example HL_VD: " << (HL_VD.count()%3) << " ; " <<  (HL_VD.count()/3)+1 << " ; " << (HL_VD.count()/3);
 
     if((HL_VD.count()%3) > 0 )
     {
@@ -6697,12 +6640,11 @@ void MYWORD::CreatShablon_HL_VD()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateHL_VD(QString::number(i));
         }
     }
     else
@@ -6711,12 +6653,11 @@ void MYWORD::CreatShablon_HL_VD()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateHL_VD(QString::number(i));
         }
     }
 
@@ -6725,7 +6666,7 @@ void MYWORD::CreatShablon_HL_VD()
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -6743,6 +6684,8 @@ void MYWORD::CreatShablon_HL_VD()
 
     for(int i=0;i < HL_VD.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateHL_VD(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -6795,7 +6738,8 @@ void MYWORD::CreatShablon_HL_VD()
             flag =0;
 
             k++;
-            if(k > (HL_VD.count()/3)+1 )
+
+            if((HL_VD.count()%3) > 0  && k > (HL_VD.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -6803,9 +6747,16 @@ void MYWORD::CreatShablon_HL_VD()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((HL_VD.count()%3) == 0  && k > (HL_VD.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -6824,7 +6775,11 @@ void MYWORD::CreatShablon_HL_VD()
 
 
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
-    WordApplication_2->dynamicCall("Quit (void)");
+    if(stateViewWord == false)
+        WordApplication_2->dynamicCall("Quit (void)");
+
+
+    delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_BQ()
@@ -6840,28 +6795,16 @@ void MYWORD::CreatShablon_BQ()
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
+
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//BQG");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//BQG");
 
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
-    qDebug() <<"BQ_G.count()/3 = " << QString::number(BQ_G.count()/3);
-
-
-
-    //    for(int i=1; i < (BQ.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
-
+     qDebug () << "Example BQ_G: " << (BQ_G.count()%3) << " ; " <<  (BQ_G.count()/3)+1 << " ; " << (BQ_G.count()/3);
 
     if((BQ_G.count()%3) > 0 )
     {
@@ -6869,11 +6812,11 @@ void MYWORD::CreatShablon_BQ()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateBQ_G(QString::number(i));
 
         }
     }
@@ -6883,11 +6826,11 @@ void MYWORD::CreatShablon_BQ()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateBQ_G(QString::number(i));
 
         }
     }
@@ -6897,7 +6840,7 @@ void MYWORD::CreatShablon_BQ()
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -6915,16 +6858,16 @@ void MYWORD::CreatShablon_BQ()
 
     for(int i=0;i < BQ_G.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateBQ_G(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
         CellRange_2 = StartCell_2->querySubObject("Range()");
+        CellRange_2->dynamicCall("InsertAfter(Text)", BQ_G[i]);
 
         StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 2, 1+flag); // (ячейка C1)
         CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-        CellRange_2->dynamicCall("InsertAfter(Text)", BQ_G[i]);
-
         CellRange_2_3->dynamicCall("InsertAfter(Text)", BQ_GName[i]);
 
 
@@ -6967,7 +6910,8 @@ void MYWORD::CreatShablon_BQ()
             flag =0;
 
             k++;
-            if(k > (BQ_G.count()/3)+1 )
+
+            if((BQ_G.count()%3) > 0  && k > (BQ_G.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -6975,9 +6919,16 @@ void MYWORD::CreatShablon_BQ()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((BQ_G.count()%3) == 0  && k > (BQ_G.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -6999,6 +6950,8 @@ void MYWORD::CreatShablon_BQ()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
     if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+    delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_DA()
@@ -7014,17 +6967,15 @@ void MYWORD::CreatShablon_DA()
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//DA");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//DA");
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
-    qDebug() <<"DA_DD.count()/2 = " << QString::number(DA.count()/2);
-
-    qDebug() <<"DA_DD.count()/2%10 = " << QString::number(DA.count()%2);
-
-
+    qDebug () << "Example DA: " << (DA.count()%2) << " ; " <<  (DA.count()/2)+1 << " ; " << (DA.count()/2);
 
     if((DA.count()%2) > 0 )
     {
@@ -7032,12 +6983,11 @@ void MYWORD::CreatShablon_DA()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateDA(QString::number(i));
         }
     }
     else
@@ -7046,11 +6996,11 @@ void MYWORD::CreatShablon_DA()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateDA(QString::number(i));
 
         }
     }
@@ -7081,6 +7031,8 @@ void MYWORD::CreatShablon_DA()
 
     for(int i=0;i < DA.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateDA(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -7126,7 +7078,9 @@ void MYWORD::CreatShablon_DA()
             flag =0;
 
             k++;
-            if(k > (DA.count()/2)+1 )
+
+
+            if((DA.count()%2) > 0  && k > (DA.count()/2)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -7134,9 +7088,16 @@ void MYWORD::CreatShablon_DA()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((DA.count()%2) == 0  && k > (DA.count()/2))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -7158,6 +7119,8 @@ void MYWORD::CreatShablon_DA()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
    if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+   delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_DD()
@@ -7173,17 +7136,15 @@ void MYWORD::CreatShablon_DD()
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)",saveDir+"//RESULT//DD");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)",saveDir+"//RESULT//DD");
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
-    qDebug() <<"DA_DD.count()/2 = " << QString::number(DD.count()/2);
-
-    qDebug() <<"DA_DD.count()/2%10 = " << QString::number(DD.count()%2);
-
-
+    qDebug () << "Example DD: " << (DD.count()%2) << " ; " <<  (DD.count()/2)+1 << " ; " << (DD.count()/2);
 
     if((DD.count()%2) > 0 )
     {
@@ -7191,11 +7152,11 @@ void MYWORD::CreatShablon_DD()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateDD(QString::number(i));
 
         }
     }
@@ -7205,12 +7166,11 @@ void MYWORD::CreatShablon_DD()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateDD(QString::number(i));
         }
     }
 
@@ -7222,7 +7182,7 @@ void MYWORD::CreatShablon_DD()
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2 = nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -7240,7 +7200,9 @@ void MYWORD::CreatShablon_DD()
 
     for(int i=0;i < DD.count();i++)
     {
-        flag++;
+        //this->thread()->msleep(10);
+        emit updateDD(QString::number(i));
+        flag++; //чет не так в нижней ячейке
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
         CellRange_2 = StartCell_2->querySubObject("Range()");
@@ -7285,7 +7247,9 @@ void MYWORD::CreatShablon_DD()
             flag =0;
 
             k++;
-            if(k > (DD.count()/2)+1 )
+
+
+            if((DD.count()%2) > 0  && k > (DD.count()/2)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -7293,9 +7257,16 @@ void MYWORD::CreatShablon_DD()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((DD.count()%2) == 0  && k > (DD.count()/2))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -7317,6 +7288,8 @@ void MYWORD::CreatShablon_DD()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
     if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+    delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_U()
@@ -7334,38 +7307,21 @@ void MYWORD::CreatShablon_U()
 
 
 
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+    // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//U");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//U");
 
 
 
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
-
-
-
-    qDebug() <<"U.count()/3 = " << QString::number(U.count()/3);
-
-
-
-    //    for(int i=1; i < (R.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
-
+    qDebug () << "Example U: " << (U.count()%3) << " ; " <<  (U.count()/3)+1 << " ; " << (U.count()/3);
 
     if((U.count()%3) > 0 )
     {
@@ -7373,12 +7329,11 @@ void MYWORD::CreatShablon_U()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateU(QString::number(i));
         }
     }
     else
@@ -7387,34 +7342,19 @@ void MYWORD::CreatShablon_U()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateU(QString::number(i));
 
         }
     }
 
-
-
-    //    QAxObject* Tables_2 = ActiveDocument_2->querySubObject("Tables(1)");
-
-
-
-    //    QAxObject* StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2 = StartCell_2->querySubObject("Range()");
-
-    //    QAxObject* StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 2, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-
-
-
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -7432,6 +7372,8 @@ void MYWORD::CreatShablon_U()
 
     for(int i=0;i < U.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateU(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -7451,7 +7393,9 @@ void MYWORD::CreatShablon_U()
             flag =0;
 
             k++;
-            if(k > (U.count()/3)+1 )
+
+
+            if((U.count()%3) > 0  && k > (U.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -7459,9 +7403,16 @@ void MYWORD::CreatShablon_U()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((U.count()%3) == 0  && k > (U.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -7475,14 +7426,16 @@ void MYWORD::CreatShablon_U()
     //Сохранить pdf
     //   ActiveDocument_2->dynamicCall("ExportAsFixedFormat (const QString&,const QString&)","D://11111//1//U" ,"17");//fileName.split('.').first()
 
-    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//U");//"D://11111//1//U");
-    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//U");//"D://11111//1//U");
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//U");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//U");
 
 
 
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
    if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+   delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_L()
@@ -7500,37 +7453,20 @@ void MYWORD::CreatShablon_L()
 
 
 
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
+    // ActiveDocument_2->querySubObject("Range()")->dynamicCall("Copy()");
 
 
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
-
-
-
-
-
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//L");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//L");
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
 
 
-    qDebug() <<"U.count()/3 = " << QString::number(L.count()/3);
-
-
-
-    //    for(int i=1; i < (R.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
+   qDebug () << "Example L: " << (L.count()%3) << " ; " <<  (L.count()/3)+1 << " ; " << (L.count()/3);
 
 
     if((L.count()%3) > 0 )
@@ -7539,11 +7475,11 @@ void MYWORD::CreatShablon_L()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateL(QString::number(i));
 
         }
     }
@@ -7553,34 +7489,19 @@ void MYWORD::CreatShablon_L()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateL(QString::number(i));
         }
     }
-
-
-
-    //    QAxObject* Tables_2 = ActiveDocument_2->querySubObject("Tables(1)");
-
-
-
-    //    QAxObject* StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2 = StartCell_2->querySubObject("Range()");
-
-    //    QAxObject* StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 2, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-
 
 
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -7598,6 +7519,8 @@ void MYWORD::CreatShablon_L()
 
     for(int i=0;i < L.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateL(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -7649,7 +7572,9 @@ void MYWORD::CreatShablon_L()
             flag =0;
 
             k++;
-            if(k > (L.count()/3)+1 )
+
+
+            if((L.count()%3) > 0  && k > (L.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -7657,9 +7582,16 @@ void MYWORD::CreatShablon_L()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((L.count()%3) == 0  && k > (L.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -7675,8 +7607,8 @@ void MYWORD::CreatShablon_L()
     //Сохранить pdf
     //   ActiveDocument_2->dynamicCall("ExportAsFixedFormat (const QString&,const QString&)","D://11111//1//L" ,"17");//fileName.split('.').first()
 
-   ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//L");//"D://11111//1//L");
-   ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//L");//"D://11111//1//L");
+   ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//L");
+   ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//L");
 
 
 
@@ -7684,6 +7616,8 @@ void MYWORD::CreatShablon_L()
    //  ActiveDocument_2->dynamicCall("Close (boolean)", false);
    if(stateViewWord == false)
         WordApplication_2->dynamicCall("Quit (void)");
+
+   delete WordApplication_2;
 }
 
 void MYWORD::CreatShablon_TV()
@@ -7694,39 +7628,21 @@ void MYWORD::CreatShablon_TV()
 
     QAxObject* WordDocuments_2 = WordApplication_2->querySubObject( "Documents()" ); // Получаю интерфейсы к его подобъекту "коллекция открытых документов":
 
-    WordDocuments_2->querySubObject( "Open(%T)",FileDir_TV); //D:\\11111\\One.docx
+    WordDocuments_2->querySubObject("Open(%T)",FileDir_TV); //D:\\11111\\One.docx
 
 
     QAxObject* ActiveDocument_2 = WordApplication_2->querySubObject("ActiveDocument()");
 
+    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject("Range()")->dynamicCall("Copy()");
 
-
-    // ActiveDocument_2->querySubObject( "Range()" )->querySubObject("Copy()");
-
-
-    ActiveDocument_2->querySubObject("Tables(1)")->querySubObject( "Range()" )->querySubObject("Copy()");
-
+    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//TV");
+    ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//TV");
 
     QAxObject *selection_2 = WordApplication_2->querySubObject("Selection()");
 
 
 
-
-    qDebug() <<"U.count()/3 = " << QString::number(TV.count()/3);
-
-
-
-    //    for(int i=1; i < (R.count()/3);i++)
-    //    {
-
-    //        selection_2->dynamicCall("EndKey(wdStory)");
-
-    //        selection_2->dynamicCall("InsertBreak()");
-
-
-    //        selection_2->querySubObject( "Paste()");
-
-    //    }
+    qDebug () << "Example TV: " << (TV.count()%3) << " ; " <<  (TV.count()/3)+1 << " ; " << (TV.count()/3);
 
 
     if((TV.count()%3) > 0 )
@@ -7735,12 +7651,11 @@ void MYWORD::CreatShablon_TV()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
-
+            emit updateTV(QString::number(i));
         }
     }
     else
@@ -7749,34 +7664,20 @@ void MYWORD::CreatShablon_TV()
         {
 
             selection_2->dynamicCall("EndKey(wdStory)");
-
             selection_2->dynamicCall("InsertBreak()");
+            //this->thread()->msleep(10);
+            selection_2->dynamicCall("Paste()");
 
-
-            selection_2->querySubObject( "Paste()");
+            emit updateTV(QString::number(i));
 
         }
     }
 
 
-
-    //    QAxObject* Tables_2 = ActiveDocument_2->querySubObject("Tables(1)");
-
-
-
-    //    QAxObject* StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2 = StartCell_2->querySubObject("Range()");
-
-    //    QAxObject* StartCell_2_3  = Tables_2->querySubObject("Cell(Row, Column)", 2, 2); // (ячейка C1)
-    //    QAxObject* CellRange_2_3 = StartCell_2_3->querySubObject("Range()");
-
-
-
-
     /////////////////////////////////////////////////////
 
 
-    QAxObject* Tables_2,*StartCell_2,*CellRange_2,*StartCell_2_3,*CellRange_2_3;
+    QAxObject* Tables_2= nullptr,*StartCell_2= nullptr,*CellRange_2= nullptr,*StartCell_2_3= nullptr,*CellRange_2_3= nullptr;
 
     int flag =0;
 
@@ -7794,6 +7695,8 @@ void MYWORD::CreatShablon_TV()
 
     for(int i=0;i < TV.count();i++)
     {
+        //this->thread()->msleep(10);
+        emit updateTV(QString::number(i));
         flag++;
 
         StartCell_2  = Tables_2->querySubObject("Cell(Row, Column)", 1, 1+flag); // (ячейка C1)
@@ -7813,7 +7716,9 @@ void MYWORD::CreatShablon_TV()
             flag =0;
 
             k++;
-            if(k > (TV.count()/3)+1 )
+
+
+            if((TV.count()%3) > 0  && k > (TV.count()/3)+1)
             {
 
                 qDebug () << "Конец ; K = " << k;
@@ -7821,9 +7726,16 @@ void MYWORD::CreatShablon_TV()
             }
             else
             {
-                Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
-
-                qDebug () << "K = " << k;
+                if((TV.count()%3) == 0  && k > (TV.count()/3))
+                {
+                    qDebug () << "Конец ; K = " << k;
+                    break;
+                }
+                else
+                {
+                   qDebug () << "K = " << k;
+                   Tables_2 = ActiveDocument_2->querySubObject("Tables(%T)",QString::number(k));
+                }
             }
 
         }
@@ -7838,7 +7750,7 @@ void MYWORD::CreatShablon_TV()
     //   ActiveDocument_2->dynamicCall("ExportAsFixedFormat (const QString&,const QString&)","D://11111//1//L" ,"17");//fileName.split('.').first()
 
    ActiveDocument_2->dynamicCall("SaveAs (const QString&)", saveDir+"//RESULT//TV");
-   ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//TV");//"D://11111//1//TV");
+   ActiveDocument_2->dynamicCall("SaveAs2 (const QString&)", saveDir+"//RESULT//TV");
 
 
 
@@ -7846,7 +7758,12 @@ void MYWORD::CreatShablon_TV()
 
 
    if(stateViewWord == false)
+   {
         WordApplication_2->dynamicCall("Quit (void)");
+   }
+
+   delete WordApplication_2;
+
 }
 
 

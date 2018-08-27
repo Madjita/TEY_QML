@@ -15,13 +15,18 @@
 #include<QSqlQueryModel>
 #include <QSqlRecord>
 
+
+
+
 class MYWORD : public QObject
 {
     Q_OBJECT
 public:
     explicit MYWORD(QString FileDir, QString FileDir_S_R,QString FileDir_XP_XS_XW_X,QString FileDir_C_Z, QString FileDir_BQ,QString FileDir_DA,QString FileDir_U,QString FileDir_L,QString FileDir_DD,QString FileDir_TV,QString fileNames_HL_VD,QString fileNames_VT,QObject *parent = nullptr);
 
+    ~MYWORD();
 
+    QStringList listMYWORD;
 
     QString FileDir,FileDir_S_R,FileDir_XP_XS_XW_X,FileDir_C_Z,FileDir_BQ,FileDir_DA,FileDir_DD,FileDir_FindMSWord;
 
@@ -30,7 +35,6 @@ public:
 
     QString saveDir;
 
-    QList<QAxObject*> WordApplicationShablonList; // Шаблоны
 
     QAxObject* WordApplication, // Создаю интерфейс к MSWord  перечню
 
@@ -141,13 +145,22 @@ signals:
 
     void Part(QString);
 
-
-
     //QML
     void qml_StartFind();
-//    void findData(QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList,QStringList);
-
+    void qml_CreateShablon();
     void findData(int R ,int C_Z,int XP_XS_XW_X,int BQ_G,int DD,int DA,int U,int L,int TV,int HL_VD,int VT);
+
+    void updateR(QString);
+    void updateC_Z(QString);
+    void updateXP_XS_XW_X(QString XP_XS_XW_X);
+    void updateBQ_G(QString);
+    void updateDD(QString);
+    void updateDA(QString);
+    void updateU(QString);
+    void updateL(QString);
+    void updateTV(QString);
+    void updateHL_VD(QString);
+    void updateVT(QString);
 
 public slots:
 
@@ -168,7 +181,7 @@ public slots:
     bool findRussianLanguage(QString text);
 
 
-    void CreatShablon();
+    void creatShablon();
 
     QString addData_R_Power_NTD(int i);
     QString addData_R_TemperatureRange_NTD(int i);
@@ -199,7 +212,11 @@ public slots:
 
     void Work();
 
-    void WorkFind();
+    void setViewFlag(int flag);
+    int getViewFlag();
+
+
+    //void WorkFind();
 
 
 

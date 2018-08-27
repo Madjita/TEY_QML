@@ -46,6 +46,7 @@ var Bse = Bs;
 
 function myColorAnimation(rows)
 {
+
     stepR = (Re - Rs) / rows
     stepG = (Ge - Gs) / rows
     stepB = (Be - Bs) / rows
@@ -53,5 +54,6 @@ function myColorAnimation(rows)
     Rse += stepR
     Gse += stepG
     Bse += stepB
+
 }
 

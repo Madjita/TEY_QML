@@ -10,11 +10,10 @@ import "utils.js" as Utils
 
 Page {
     id: page
-    width: 600
-    height: 400
+    contentHeight: parent.height
+    contentWidth:  parent.width
     smooth: false
     antialiasing: false
-    anchors.fill: parent
 
     property string colorBackground: "#272c32"
     property string colorTittle: "#f6fbff"
@@ -49,21 +48,13 @@ Page {
             // @disable-check M223
             onClicked: {
                 // @disable-check M223
-                if (aim.running) {
+                if (Qt.platform.os == "windows") {
                     // @disable-check M222
-                    aim.stop()
+                    fileDialogWindows.open()
                     // @disable-check M223
                 } else {
-
-                    // @disable-check M223
-                    if (Qt.platform.os == "windows") {
-                        // @disable-check M222
-                        fileDialogWindows.open()
-                        // @disable-check M223
-                    } else {
-                        // @disable-check M222
-                        stack.push(filePicker)
-                    }
+                    // @disable-check M222
+                    stack.push(filePicker)
                 }
             }
         }
@@ -187,16 +178,10 @@ Page {
                         // @disable-check M223
                     {
 
-                        // @disable-check M223
-                        for (var i = 0; i < wordQMLModel.dataFind.count; i++) {
-                            // @disable-check M222
-//                            page2.myModel.append({
-//                                                       "count": wordQMLModel.dataFind[0]
-//                                                   })
-                        }
-
                         // @disable-check M222
                         stack.push(mainViewPage2)
+
+                        controlPop.visible = true;
 
                         // @disable-check M222
                     }
@@ -205,64 +190,55 @@ Page {
                 }
             }
 
-            ColorAnimation {
-                id: aimPie
-                target: pie
-                property: "strokeColor"
-                from: "#e2b62f"
-                to: "#9fcd61"
-                duration: 36000
-            }
+//            // @disable-check M221
+//            ParallelAnimation {
+//                id: aim
+//                objectName: "aimBar"
 
-            // @disable-check M221
-            ParallelAnimation {
-                id: aim
-                objectName: "aimBar"
+//                // @disable-check M221
+//                SequentialAnimation {
+//                    ColorAnimation {
+//                        target: pie
+//                        property: "strokeColor"
+//                        from: "#e2b62f"
+//                        to: "#9fcd61"
+//                        duration: 3600
+//                    }
+//                    ColorAnimation {
+//                        target: pie
+//                        property: "strokeColor"
+//                        from: "#9fcd61"
+//                        to: colorBackground
+//                        duration: 3600 / 4 + 100
+//                    }
+//                }
 
-                // @disable-check M221
-                SequentialAnimation {
-                    ColorAnimation {
-                        target: pie
-                        property: "strokeColor"
-                        from: "#e2b62f"
-                        to: "#9fcd61"
-                        duration: 3600
-                    }
-                    ColorAnimation {
-                        target: pie
-                        property: "strokeColor"
-                        from: "#9fcd61"
-                        to: colorBackground
-                        duration: 3600 / 4 + 100
-                    }
-                }
-
-                // @disable-check M221
-                SequentialAnimation {
-                    NumberAnimation {
-                        target: pie
-                        property: "end"
-                        from: 0
-                        to: 360
-                        duration: 3600
-                    }
-                    NumberAnimation {
-                        target: pie
-                        property: "begin"
-                        from: 0
-                        to: 360
-                        duration: 3600 / 4
-                    }
-                    NumberAnimation {
-                        target: pie
-                        property: "begin"
-                        from: 0
-                        to: 0
-                        duration: 1
-                    }
-                }
-                loops: Animation.Infinite
-            }
+//                // @disable-check M221
+//                SequentialAnimation {
+//                    NumberAnimation {
+//                        target: pie
+//                        property: "end"
+//                        from: 0
+//                        to: 360
+//                        duration: 3600
+//                    }
+//                    NumberAnimation {
+//                        target: pie
+//                        property: "begin"
+//                        from: 0
+//                        to: 360
+//                        duration: 3600 / 4
+//                    }
+//                    NumberAnimation {
+//                        target: pie
+//                        property: "begin"
+//                        from: 0
+//                        to: 0
+//                        duration: 1
+//                    }
+//                }
+//                loops: Animation.Infinite
+//            }
         }
     }
 }

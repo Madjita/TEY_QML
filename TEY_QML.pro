@@ -8,7 +8,7 @@ CONFIG += c++11
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-#DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -16,7 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
+    main.cpp \
     bdata.cpp \
     word.cpp \
     wordqmlmodel.cpp \
@@ -43,7 +43,10 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
-    PageSeittings.qml
+    PageSeittings.qml \
+    Page1Form.qml \
+    Page2Form.qml \
+    SettingsIcon.qml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

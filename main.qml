@@ -7,6 +7,8 @@ import QtQuick.Controls.Styles 1.4
 
 import Qt.labs.platform 1.0
 
+import QtQuick.Controls.Styles.Flat 1.0 as Flat
+
 ApplicationWindow {
     id:main
     visible: true
@@ -52,12 +54,20 @@ ApplicationWindow {
 
 
                 onClicked: {
+
+                    if(stack.get(1).objectName ==="pageSecond")
+                    {
+
+                        stack.get(1).startButton.visible = true;
+                        stack.get(1).endButton.visible = false;
+                    }
+
                     stack.pop();
                     console.log("stack.depth = ",stack.depth);
-                    if(stack.depth <= 1)
+                    if(stack.depth == 1)
                     {
-                       controlPop.visible = false;
-                       controlSeitting.visible = true;
+                        controlPop.visible = false;
+                        controlSeitting.visible = true;
                     }
 
 
@@ -98,6 +108,39 @@ ApplicationWindow {
                 font.pointSize: 15
             }
 
+
+            SettingsIcon {
+                id:controlSeitting
+                visible: true
+                width: Math.round(32 * Flat.FlatStyle.scaleFactor)
+                height: Math.round(32 * Flat.FlatStyle.scaleFactor)
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right - 10;
+                anchors.rightMargin: textMargins - Math.round(8 * Flat.FlatStyle.scaleFactor)
+                color: settingsButton.pressed ? "#48bfbb" : colorTittle
+
+                MouseArea {
+                    id: settingsButton
+                    anchors.fill: parent
+                    onClicked:
+                    {
+                        //menu.open();
+                        //filePicker.visible = false;
+
+                        console.log("stack.depth = ",stack.depth);
+                        stack.push(mainViewPageSeittings);
+                        if(stack.depth == 2)
+                        {
+                            controlSeitting.visible = false;
+                            controlPop.visible = true;
+                        }
+
+                    }
+                }
+            }
+
+
+            /*
             ToolButton {
                 id: controlSeitting
                 width: 320
@@ -141,7 +184,9 @@ ApplicationWindow {
                                                           || controlSeitting.highlighted))
                 }
 
+
             }
+            */
         }
 
     }
@@ -182,42 +227,42 @@ ApplicationWindow {
 
 
 
-              console.log("enter",stack.get(1).objectName);
+            console.log("enter",stack.get(1).objectName);
         }
 
 
         pushEnter: Transition {
-                 PropertyAnimation {
-                     property: "opacity"
-                     from: 0
-                     to:1
-                     duration: 200
-                 }
-             }
-             pushExit: Transition {
-                 PropertyAnimation {
-                     property: "opacity"
-                     from: 1
-                     to:0
-                     duration: 200
-                 }
-             }
-             popEnter: Transition {
-                 PropertyAnimation {
-                     property: "opacity"
-                     from: 0
-                     to:1
-                     duration: 200
-                 }
-             }
-             popExit: Transition {
-                 PropertyAnimation {
-                     property: "opacity"
-                     from: 1
-                     to:0
-                     duration: 200
-                 }
-             }
+            PropertyAnimation {
+                property: "opacity"
+                from: 0
+                to:1
+                duration: 200
+            }
+        }
+        pushExit: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 1
+                to:0
+                duration: 200
+            }
+        }
+        popEnter: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 0
+                to:1
+                duration: 200
+            }
+        }
+        popExit: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 1
+                to:0
+                duration: 200
+            }
+        }
     }
 
 
@@ -272,7 +317,7 @@ ApplicationWindow {
 
         onAccepted: {
 
-           // stack.get(0).aim.start();
+            // stack.get(0).aim.start();
 
             stack.get(0).pieBar.begin = "0";
 
@@ -280,9 +325,8 @@ ApplicationWindow {
 
             word.qml_StartFind();
 
-            controlPop.clicked();
             controlSeitting.visible = false;
-
+            controlPop.visible = false;
 
         }
     }

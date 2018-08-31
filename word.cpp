@@ -55,7 +55,7 @@ MYWORD::MYWORD(QObject *parent):
 
 MYWORD::~MYWORD()
 {
-    this->thread()->exit();
+    this->thread()->wait();
     delete this;
 }
 

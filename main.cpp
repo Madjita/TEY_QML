@@ -8,18 +8,21 @@
 #include <word.h>
 #include <wordqmlmodel.h>
 
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
 
-//    QLoggingCategory::setFilterRules("*.debug=false\n"
-//                                           "driver.usb.debug=true");
+    QLoggingCategory::setFilterRules("*.debug=false\n"
+                                           "driver.usb.debug=true");
+
 
 
     MYWORD* word = new MYWORD();
     BData* bd = new BData();
+
 
     word->setBD(bd);
 

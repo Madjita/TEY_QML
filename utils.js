@@ -28,9 +28,13 @@ function backgroundAltColor() {
 
 var CountLoadingFileBar = 0;
 
-var Rs = 0xe2;
-var Gs = 0xb6;
-var Bs = 0x2f;
+//var Rs = 0xe2;
+//var Gs = 0xb6;
+//var Bs = 0x2f;
+
+var Rs = 0xff;
+var Gs = 0x00;
+var Bs = 0x00;
 
 var Re = 0x9f;
 var Ge = 0xcd;

@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Page1Form.ui.qml</file>
-        <file>Page2Form.ui.qml</file>
+        <file>Page1Form.qml</file>
+        <file>Page2Form.qml</file>
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Best.jpg</file>
@@ -12,5 +12,6 @@
         <file>icons/ic_folder_open_black_48dp.png</file>
         <file>icons/ic_insert_drive_file_black_48dp.png</file>
         <file>PageSeittings.qml</file>
+        <file>SettingsIcon.qml</file>
     </qresource>
 </RCC>

@@ -11,8 +11,8 @@ import "utils.js" as Utils
 Page {
     id: page
     objectName: "pageFirst"
-    contentHeight: parent.height
-    contentWidth: parent.width
+    contentHeight: parent.implicitHeight
+    contentWidth:  parent.implicitWidth
     smooth: false
     antialiasing: false
 

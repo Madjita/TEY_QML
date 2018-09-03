@@ -8,8 +8,8 @@ import Qt.labs.platform 1.0
 
 Page {
     id: page
-    contentHeight: parent.height
-    contentWidth:  parent.width
+    contentHeight: parent.implicitHeight
+    contentWidth:  parent.implicitWidth
     smooth: false
     antialiasing: false
 

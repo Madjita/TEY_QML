@@ -46,7 +46,7 @@ DISTFILES += \
     PageSeittings.qml \
     Page1Form.qml \
     Page2Form.qml \
-    SettingsIcon.qml
+    SettingsIcon.qml \
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

@@ -9,6 +9,7 @@ import Qt.labs.platform 1.0
 
 import QtQuick.Controls.Styles.Flat 1.0 as Flat
 
+
 ApplicationWindow {
     id:main
     visible: true
@@ -16,9 +17,6 @@ ApplicationWindow {
     height: 480
     color: "#272c32"
     title: qsTr("Карты рабочих режимов")
-
-
-
 
 
     property int dpi: Screen.pixelDensity * 25.4
@@ -114,9 +112,9 @@ ApplicationWindow {
                 visible: true
                 width: Math.round(32 * Flat.FlatStyle.scaleFactor)
                 height: Math.round(32 * Flat.FlatStyle.scaleFactor)
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right - 10;
-                anchors.rightMargin: textMargins - Math.round(8 * Flat.FlatStyle.scaleFactor)
+
+                //anchors.right: parent.right - 10;
+                anchors.rightMargin: Math.round(8 * Flat.FlatStyle.scaleFactor)
                 color: settingsButton.pressed ? "#48bfbb" : colorTittle
 
                 MouseArea {
@@ -139,54 +137,6 @@ ApplicationWindow {
                 }
             }
 
-
-            /*
-            ToolButton {
-                id: controlSeitting
-                width: 320
-                text: qsTr("⋮")
-                visible: true
-                font.pointSize: 20
-
-                onClicked:
-                {
-                    //menu.open();
-                    //filePicker.visible = false;
-
-                    console.log("stack.depth = ",stack.depth);
-                    stack.push(mainViewPageSeittings);
-                    if(stack.depth == 2)
-                    {
-                      controlSeitting.visible = false;
-                      controlPop.visible = true;
-                    }
-
-                }
-                contentItem: Text {
-                    text: controlSeitting.text
-                    font: controlSeitting.font
-                    opacity: enabled ? 1.0 : 0.3
-                    color: controlSeitting.down ? "#48bfbb" : colorTittle
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
-
-                background: Rectangle {
-                    implicitWidth: 40
-                    implicitHeight: 40
-                    color: Qt.darker("#33333333", controlSeitting.enabled
-                                     && (controlSeitting.checked
-                                         || controlSeitting.highlighted) ? 1.5 : 1.0)
-                    opacity: enabled ? 1 : 0.3
-                    visible: controlSeitting.down || (controlSeitting.enabled
-                                                      && (controlSeitting.checked
-                                                          || controlSeitting.highlighted))
-                }
-
-
-            }
-            */
         }
 
     }
@@ -197,6 +147,7 @@ ApplicationWindow {
         id: stack
         initialItem: mainView
         anchors.fill: parent
+
 
         states: State {
             name: "stack"
@@ -209,23 +160,18 @@ ApplicationWindow {
 
             if(stack.get(0).objectName ==="pageFirst" && stack.depth <= 1)
             {
-
                 stack.get(0).startWork.clicked(this);
             }
 
             if(stack.get(1).objectName ==="pageSecond" && stack.get(1).startButton.visible === true)
             {
-
                 stack.get(1).startButton.clicked(this);
             }
 
             if(stack.get(1).objectName ==="pageSecond" && stack.get(1).endButton.visible === true)
             {
-
                 stack.get(1).endButton.clicked(this);
             }
-
-
 
             console.log("enter",stack.get(1).objectName);
         }

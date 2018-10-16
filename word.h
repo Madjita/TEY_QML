@@ -49,7 +49,7 @@ public:
 
 
 
-    int temp;
+    QString temp;
 
 
     int columns; //Колонки в Перечне
@@ -220,6 +220,8 @@ public slots:
 
 
     //void WorkFind();
+
+    void catchException(int, const QString&, const QString&, const QString&);
 
 
 

@@ -9,16 +9,179 @@ import Qt.labs.platform 1.0
 
 import QtQuick.Controls.Styles.Flat 1.0 as Flat
 
-
+import QtWinExtras 1.0
+import QtMultimedia 5.0
 ApplicationWindow {
-    id:main
+    id:mainWindow
+    objectName: "mainWindow"
     visible: true
     width: 640
     height: 480
     color: "#272c32"
-    title: qsTr("Карты рабочих режимов")
+    title: qsTr("Карты рабочих режимов режимов")
 
 
+    property string stWindow: ""
+    onVisibilityChanged:
+    {
+        console.log("mainWindow.visibility = ",mainWindow.visibility,"  ; "+stWindow);
+        if(stWindow === "43" && mainWindow.visibility === 2)
+        {
+            stWindow == "";
+            mainWindow.showMaximized();
+        }
+
+    }
+
+    SystemTrayIcon {
+        id: sysTryIcon
+        visible: true
+        iconSource: "qrc:/logo.ico"
+
+        menu: Menu {
+            MenuItem {
+                text: qsTr("Quit")
+                onTriggered: Qt.quit()
+            }
+        }
+    }
+
+    DwmFeatures {
+        id: dwmFeatures
+        topGlassMargin: -1
+        leftGlassMargin: -1
+        rightGlassMargin: -1
+        bottomGlassMargin: -1
+
+
+    }
+
+    TaskbarButton {
+        id: taskbarButton
+        overlay.iconSource: "qrc:/logo.ico"
+        overlay.accessibleDescription: "qrc:/logo.ico"
+        progress.visible: true
+        progress.value: 0
+
+    }
+
+
+
+    ThumbnailToolBar {
+        ThumbnailToolButton { iconSource: "qrc:/icons/closePNG.png"; tooltip: "Exit"; onClicked: Qt.quit() }
+    }
+
+    JumpList {
+        id: jumpList
+        recent.visible: true
+        frequent.visible: true
+        tasks.visible: true
+    }
+
+
+
+     flags: Qt.Window | Qt.FramelessWindowHint // Отключаем обрамление окна
+
+
+
+    // Объявляем свойства, которые будут хранить позицию зажатия курсора мыши
+    property int previousX
+    property int previousY
+
+    MouseArea {
+        id: topArea
+        z:1
+        height: 5
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+        // Устанавливаем форму курсора, чтобы было понятно, что это изменение размера
+        cursorShape: Qt.SizeVerCursor
+
+        onPressed: {
+            // Запоминаем позицию по оси Y
+            previousY = mouseY
+        }
+
+        // При изменении позиции делаем пересчёт позиции окна, и его высоты
+        onMouseYChanged: {
+            var dy = mouseY - previousY
+            mainWindow.setY(mainWindow.y + dy)
+            mainWindow.setHeight(mainWindow.height - dy)
+        }
+    }
+
+    // Аналогичные расчёты для остальных трёх областей ресайза
+    MouseArea {
+        id: bottomArea
+        z:1
+        height: 5
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        cursorShape: Qt.SizeVerCursor
+
+        onPressed: {
+            previousY = mouseY
+        }
+
+        onMouseYChanged: {
+            var dy = mouseY - previousY
+            mainWindow.setHeight(mainWindow.height + dy)
+        }
+    }
+
+    MouseArea {
+        id: leftArea
+        z:1
+        width: 5
+        anchors {
+            top: topArea.bottom
+            bottom: bottomArea.top
+            left: parent.left
+        }
+        cursorShape: Qt.SizeHorCursor
+
+        onPressed: {
+            previousX = mouseX
+        }
+
+        onMouseXChanged: {
+            var dx = mouseX - previousX
+            mainWindow.setX(mainWindow.x + dx)
+            mainWindow.setWidth(mainWindow.width - dx)
+        }
+    }
+
+    MouseArea {
+        id: rightArea
+        z:1
+        width: 5
+        anchors {
+            top: topArea.bottom
+            bottom: bottomArea.top
+            right: parent.right
+        }
+        cursorShape:  Qt.SizeHorCursor
+
+        onPressed: {
+            previousX = mouseX
+        }
+
+        onMouseXChanged: {
+            var dx = mouseX - previousX
+            mainWindow.setWidth(mainWindow.width + dx)
+        }
+    }
+
+
+
+
+    //////////////////////////////////////////////////////////////////////
     property int dpi: Screen.pixelDensity * 25.4
     property string colorBackground: "#272c32"
     property string colorTittle: "#f6fbff"
@@ -31,22 +194,47 @@ ApplicationWindow {
         }
     }
 
+    /////////////////////////////////////////////
 
+    MyMenu
+    {
+        id: windowTitle
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
 
-    header: ToolBar {
-        background: Rectangle {
+        tittleLabel: title
+
+    }
+
+    //////////////////////////////////////////////
+
+    Item{
+        id: topMenu
+        height: 40;
+        anchors.top: windowTitle.bottom
+        anchors.topMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        ToolBar {
+            id: toolBar
             anchors.fill: parent
-            color: colorBackground
-        }
+            background: Rectangle {
+                anchors.fill: parent
+                color: colorBackground
+            }
 
 
-
-        RowLayout {
-            anchors.fill: parent
 
             ToolButton {
                 id: controlPop
                 text: qsTr("‹")
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 0
                 font.pointSize: 20
                 visible: false;
 
@@ -97,6 +285,8 @@ ApplicationWindow {
             }
             Label {
                 text: "Карты рабочих режимов"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 elide: Label.ElideRight
                 horizontalAlignment: Qt.AlignHCenter
@@ -109,13 +299,16 @@ ApplicationWindow {
 
             SettingsIcon {
                 id:controlSeitting
+                z:20;
                 visible: true
                 width: Math.round(32 * Flat.FlatStyle.scaleFactor)
                 height: Math.round(32 * Flat.FlatStyle.scaleFactor)
 
                 //anchors.right: parent.right - 10;
-                anchors.rightMargin: Math.round(8 * Flat.FlatStyle.scaleFactor)
                 color: settingsButton.pressed ? "#48bfbb" : colorTittle
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 0
 
                 MouseArea {
                     id: settingsButton
@@ -141,12 +334,14 @@ ApplicationWindow {
 
     }
 
-
-
     StackView {
         id: stack
+        anchors.top: topMenu.bottom
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.topMargin: 0
         initialItem: mainView
-        anchors.fill: parent
 
 
         states: State {

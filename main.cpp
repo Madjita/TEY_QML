@@ -8,6 +8,12 @@
 #include <word.h>
 #include <wordqmlmodel.h>
 
+#include <QQuickWindow>
+
+#include <QtWinExtras>
+
+QT_FORWARD_DECLARE_CLASS(QWinTaskbarButton)
+QT_FORWARD_DECLARE_CLASS(QWinTaskbarProgress)
 
 int main(int argc, char *argv[])
 {
@@ -15,9 +21,8 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    QLoggingCategory::setFilterRules("*.debug=false\n"
-                                           "driver.usb.debug=true");
-
+//    QLoggingCategory::setFilterRules("*.debug=false\n"
+//                                           "driver.usb.debug=true");
 
 
     MYWORD* word = new MYWORD();
@@ -53,6 +58,25 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("wordQMLModel", wordQMLModel);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+
+//    QObject *rootObject = engine.rootObjects().first();
+//    QObject *qmlObject = rootObject->findChild<QObject*>("mainWindow");
+
+
+
+//    if (QtWin::isCompositionEnabled())
+//        QtWin::extendFrameIntoClientArea(dynamic_cast<QQuickWindow*>(qmlObject), 0, 0, 0, 0);
+//    else
+//        QtWin::resetExtendedFrame(dynamic_cast<QQuickWindow*>(qmlObject));
+
+
+//    HINSTANCE hMod;
+//     HWND hwnd;
+//     ShellExecuteA(NULL,"open","notepad.exe",NULL,NULL,SW_SHOWNORMAL);
+//     hMod = LoadLibraryA("user32.dll");
+
+
     if (engine.rootObjects().isEmpty())
         return -1;
 

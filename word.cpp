@@ -19,6 +19,9 @@
 //    FileDir_HL_VD(_FileNames_HL_VD),
 //    FileDir_VT(_FileNames_VT),
 
+
+
+
 MYWORD::MYWORD(QObject *parent):
     QObject(parent),
     FileDir(""),
@@ -210,9 +213,11 @@ QVariant MYWORD::qml_setChangeListMYWORD(QString index, QString shablonName)
 }
 
 
+
 void MYWORD::qml_getFileName(QString str)
 {
     FileDir = str;
+
 }
 
 

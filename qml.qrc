@@ -13,5 +13,8 @@
         <file>icons/ic_insert_drive_file_black_48dp.png</file>
         <file>PageSeittings.qml</file>
         <file>SettingsIcon.qml</file>
+        <file>logo.ico</file>
+        <file>MyMenu.qml</file>
+        <file>icons/closePNG.png</file>
     </qresource>
 </RCC>

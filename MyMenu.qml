@@ -169,11 +169,22 @@ Item{
                         mainWindow.stWindow = "";
                         mainWindow.stWindow += "4";
                         mainWindow.showMaximized();
+
+                        topArea.visible = false;
+                        bottomArea.visible = false;
+                        leftArea.visible = false;
+                        rightArea.visible = false;
                     }
                     else
                     {
                         mainWindow.stWindow = "";
                         mainWindow.showNormal();
+
+
+                        topArea.visible = true;
+                        bottomArea.visible = true;
+                        leftArea.visible = true;
+                        rightArea.visible = true;
                     }
                 }
 
@@ -276,9 +287,13 @@ Item{
             }
 
             onPositionChanged: {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y)
-                mainWindow.x += delta.x;
-                mainWindow.y += delta.y;
+
+                if(mainWindow.visibility !== ApplicationWindow.Maximized )
+                {
+                    var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y)
+                    mainWindow.x += delta.x;
+                    mainWindow.y += delta.y;
+                }
             }
 
             onDoubleClicked: {
@@ -288,11 +303,21 @@ Item{
                     mainWindow.stWindow = "";
                     mainWindow.stWindow += "4";
                     mainWindow.showMaximized();
+
+                    topArea.visible = false;
+                    bottomArea.visible = false;
+                    leftArea.visible = false;
+                    rightArea.visible = false;
                 }
                 else
                 {
                     mainWindow.stWindow = "";
                     mainWindow.showNormal();
+
+                    topArea.visible = true;
+                    bottomArea.visible = true;
+                    leftArea.visible = true;
+                    rightArea.visible = true;
                 }
 
             }

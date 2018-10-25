@@ -7,10 +7,10 @@ import QtQuick.Controls.Styles 1.4
 
 import Qt.labs.platform 1.0
 
-import QtQuick.Controls.Styles.Flat 1.0 as Flat
-
+import QtGraphicalEffects 1.0
 import QtWinExtras 1.0
-import QtMultimedia 5.0
+
+import QtQuick.Controls.Styles.Flat 1.0 as Flat
 ApplicationWindow {
     id:mainWindow
     objectName: "mainWindow"
@@ -22,6 +22,7 @@ ApplicationWindow {
 
 
     property string stWindow: ""
+
     onVisibilityChanged:
     {
         console.log("mainWindow.visibility = ",mainWindow.visibility,"  ; "+stWindow);
@@ -99,6 +100,10 @@ ApplicationWindow {
         }
         // Устанавливаем форму курсора, чтобы было понятно, что это изменение размера
         cursorShape: Qt.SizeVerCursor
+
+        onDoubleClicked: {
+            //mainWindow.height = Qt.;
+        }
 
         onPressed: {
             // Запоминаем позицию по оси Y
@@ -194,15 +199,29 @@ ApplicationWindow {
         }
     }
 
+
+//    Rectangle {
+//        id: rect
+//        anchors.rightMargin: 1
+//        anchors.leftMargin: 1
+//        anchors.bottomMargin: 1
+//        anchors.topMargin: 1
+//        anchors.fill: parent
+
     /////////////////////////////////////////////
 
     MyMenu
     {
         id: windowTitle
+        x:0
+        y:0
+
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 0
+
+        Layout.fillWidth: true
 
         tittleLabel: title
 
@@ -473,7 +492,17 @@ ApplicationWindow {
     }
 
 
+  //  }
 
+//    DropShadow {
+//         anchors.fill: rect
+//         horizontalOffset: 2
+//         verticalOffset: 2
+//         radius: 5
+//         samples: 5
+//         source: rect
+//         color: "black"
+//        }
 
 
 }

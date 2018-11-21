@@ -214,7 +214,7 @@ Page {
     }
     Button {
         id: buttonCompleted
-        text: qsTr("‹ Карты созданны.")
+        text: qsTr("‹ Карты созданы.")
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right

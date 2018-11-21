@@ -2623,7 +2623,10 @@ QString MYWORD::addData_C_TemperatureRange_NTD(int i)
     if(str[0] == 'A' && str[1] == 'V' && str[2] == 'X')
     {
 
-       return c_avx_TemperatureRange.first();
+        if(c_avx_TemperatureRange.count() > 0)
+        {
+            return c_avx_TemperatureRange.first();
+        }
 
     }
 

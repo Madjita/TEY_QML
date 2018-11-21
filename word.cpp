@@ -3450,7 +3450,7 @@ void MYWORD::CreatShablon_BQ()
                 this,
                 SLOT(catchException(int, const QString &, const QString &, const QString &)));
 
-    QAxObject *newDocument = WordDocuments_2->querySubObject("Add(QVariant)", listMYWORD[2]);
+    QAxObject *newDocument = WordDocuments_2->querySubObject("Add(QVariant)", listMYWORD[3]);
 
     if(newDocument == nullptr)
     {
